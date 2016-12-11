@@ -1,0 +1,17 @@
+.DS_Store
+*.swp
+*~.nib
+build/
+*/build/*
+*.pbxuser
+*.perspective
+*.perspectivev3
+*.mode1v3
+*.mode2v3
+xcuserdata/
+DerivedData
+*.xccheckout
+*.lock
+*.moved-aside
+.Trashes
+._*
