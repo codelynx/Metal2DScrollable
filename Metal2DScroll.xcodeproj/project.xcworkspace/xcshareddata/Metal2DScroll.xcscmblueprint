@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "2C48DD411CF3D195D4DDC37790BACB57F68F3480",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "2C48DD411CF3D195D4DDC37790BACB57F68F3480" : 9223372036854775807,
+    "6349138BEF926CA681704F0C4FA8414988FD3028" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "73DBD1C0-77FC-496D-B9B5-AF7204271D0C",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "2C48DD411CF3D195D4DDC37790BACB57F68F3480" : "Metal2DScrollable\/",
+    "6349138BEF926CA681704F0C4FA8414988FD3028" : "..\/Projects\/BasicMetal2D"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "Metal2DScroll",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Metal2DScroll.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/codelynx\/Metal2DScrollable.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "2C48DD411CF3D195D4DDC37790BACB57F68F3480"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/codelynx\/BasicMetal2D.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "6349138BEF926CA681704F0C4FA8414988FD3028"
+    }
+  ]
+}

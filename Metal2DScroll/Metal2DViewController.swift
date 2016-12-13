@@ -49,29 +49,6 @@ struct Uniforms {
 	var modelViewProjectionMatrix: GLKMatrix4
 }
 
-extension CGRect {
-
-	func transform(to rect: CGRect) -> CGAffineTransform {
-		var t = CGAffineTransform.identity
-		t = t.translatedBy(x: -self.minX, y: -self.minY)
-		t = t.scaledBy(x: 1 / self.width, y: 1 / self.height)
-		t = t.scaledBy(x: rect.width, y: rect.height)
-		t = t.translatedBy(x: rect.minX * self.width / rect.width, y: rect.minY * self.height / rect.height)
-		return t
-	}
-
-}
-
-extension CGAffineTransform {
-
-	static func * (lhs: CGAffineTransform, rhs: CGAffineTransform) -> CGAffineTransform {
-		return lhs.concatenating(rhs)
-	}
-
-}
-
-
-
 
 extension GLKMatrix4: CustomDebugStringConvertible {
 
@@ -136,6 +113,8 @@ class Metal2DViewController: UIViewController, MTKViewDelegate, UIScrollViewDele
 	@IBOutlet weak var contentView: UIView!
 	@IBOutlet weak var ovalView: OvalView!
 	
+	var imageRenderble: ImageRenderable!
+	
 	override func viewDidLoad() {
 		
 		super.viewDidLoad()
@@ -190,6 +169,10 @@ class Metal2DViewController: UIViewController, MTKViewDelegate, UIScrollViewDele
 		var uniforms = Uniforms(modelViewProjectionMatrix: transform)
 		uniformsBuffer = device.makeBuffer(bytes: &uniforms, length: MemoryLayout<Uniforms>.size, options: [])
 		uniformsBuffer.label = "uniforms"
+		
+		let image = UIImage(named: "BlueMarble.png")!
+		self.imageRenderble = ImageRenderable(device: device, image: image, frame: Rect(0, 0, 4096, 2048))
+		self.scrollView.contentSize = CGSize(width: 4096, height: 2048)
 	}
 	
 	func update() {
@@ -228,6 +211,35 @@ class Metal2DViewController: UIViewController, MTKViewDelegate, UIScrollViewDele
 	}
 
 	func draw(in view: MTKView) {
+
+		guard let drawable = self.mtkView.currentDrawable else { return }
+		guard let renderPassDescriptor = self.mtkView.currentRenderPassDescriptor else { return }
+
+		let uniformPtr = UnsafeMutablePointer<Uniforms>(OpaquePointer(uniformsBuffer.contents()))
+		let targetRect = self.contentView.convert(self.contentView.bounds, to: self.mtkView)
+		let t1 = self.mtkView.bounds.transform(to: targetRect)
+		uniformPtr.pointee.modelViewProjectionMatrix = GLKMatrix4(transform: t1)
+
+
+		renderPassDescriptor.colorAttachments[0].texture = drawable.texture
+		renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(0.9, 0.9, 0.9, 1)
+		renderPassDescriptor.colorAttachments[0].loadAction = .clear
+		renderPassDescriptor.colorAttachments[0].storeAction = .store
+
+		let commandBuffer = commandQueue.makeCommandBuffer()
+		let commandEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor)
+		
+		let renderContext = RenderContext(commandEncoder: commandEncoder, transform: GLKMatrix4Identity)
+		imageRenderble.render(renderContext)
+
+		commandEncoder.endEncoding()
+		
+		commandBuffer.present(drawable)
+		commandBuffer.commit()
+
+	}
+
+	func draw2(in view: MTKView) {
 		
 		// use semaphore to encode 3 frames ahead
 		let _ = inflightSemaphore.wait(timeout: DispatchTime.distantFuture)
@@ -239,12 +251,12 @@ class Metal2DViewController: UIViewController, MTKViewDelegate, UIScrollViewDele
 		let method = 1
 		switch method {
 		case 0:
-			// (case1) somehow this code not working -- any idea?
+			// (case0) somehow this code not working -- any idea?
 			let targetRect = self.contentView.convert(self.contentView.bounds, to: self.mtkView)
 			var t1 = self.mtkView.bounds.transform(to: targetRect)
 			uniformPtr.pointee.modelViewProjectionMatrix = GLKMatrix4(transform: t1)
 		case 1:
-			// (case2) compute transform from UIScrollView's contentOffset and zoomScale -- not quite right
+			// (case1) compute transform from UIScrollView's contentOffset and zoomScale -- not quite right
 			var transform = CGAffineTransform.identity
 			let offsetX = self.scrollView.contentOffset.x / (self.mtkView.bounds.width * 2.0)
 			let offsetY = self.scrollView.contentOffset.y / (self.mtkView.bounds.height * 2.0)
@@ -252,7 +264,7 @@ class Metal2DViewController: UIViewController, MTKViewDelegate, UIScrollViewDele
 			transform = transform.scaledBy(x: self.scrollView.zoomScale, y: self.scrollView.zoomScale)
 			uniformPtr.pointee.modelViewProjectionMatrix = GLKMatrix4(transform: transform)
 		case 2:
-			// (case3) only scaling -- scaling looks OK, but no scrolling
+			// (case2) only scaling -- scaling looks OK, but no scrolling
 			let scale = scrollView.zoomScale
 			let transform = CGAffineTransform.identity.scaledBy(x: scale, y: scale)
 			uniformPtr.pointee.modelViewProjectionMatrix = GLKMatrix4(transform: transform)
@@ -308,11 +320,13 @@ class Metal2DViewController: UIViewController, MTKViewDelegate, UIScrollViewDele
 
 	public func scrollViewDidScroll(_ scrollView: UIScrollView) {
 		self.ovalView.setNeedsDisplay()
+		self.mtkView.setNeedsDisplay()
 		print("zoom=\(self.scrollView.zoomScale), offset=\(self.scrollView.contentOffset), contentSize=\(self.scrollView.contentSize), inset=\(self.scrollView.contentInset)")
 	}
 
 	public func scrollViewDidZoom(_ scrollView: UIScrollView) {
 		self.ovalView.setNeedsDisplay()
+		self.mtkView.setNeedsDisplay()
 	}
 
 }
