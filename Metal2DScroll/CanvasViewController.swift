@@ -12,12 +12,13 @@ class CanvasViewController: UIViewController {
 
 	@IBOutlet weak var renderableView: RenderableView!
 
-	var canvasScene: CanvasScene!
+	var canvasScene: CanvasScene?
 
 	override func viewDidLoad() {
 		assert(renderableView != nil)
 		super.viewDidLoad()
-		self.canvasScene = CanvasScene(contentSize: CGSize(width: 2048, height: 1024))
+		let device = self.renderableView.device
+		self.canvasScene = CanvasScene(device: device, contentSize: CGSize(width: 2048, height: 1024))
 		self.renderableView.renderableScene = self.canvasScene
 	}
 

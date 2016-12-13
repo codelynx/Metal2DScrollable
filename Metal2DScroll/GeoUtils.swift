@@ -39,7 +39,7 @@ struct Size {
 	}
 }
 
-struct Rect {
+struct Rect: CustomStringConvertible {
 	var origin: Point
 	var size: Size
 	init(_ origin: Point, _ size: Size) {
@@ -62,6 +62,7 @@ struct Rect {
 	var midY: Float { return (origin.y + origin.y + size.height) / 2.0 }
 
 	var CGRectValue: CGRect { return CGRect(x: CGFloat(origin.x), y: CGFloat(origin.y), width: CGFloat(size.width), height: CGFloat(size.height)) }
+	var description: String { return "{Rect: (\(origin.x),\(origin.y))-(\(size.width), \(size.height))}" }
 }
 
 extension CGPoint {

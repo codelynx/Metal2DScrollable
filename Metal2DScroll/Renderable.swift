@@ -13,4 +13,7 @@ import GLKit
 
 
 protocol Renderable {
+
+	func render(context: RenderContext)
+
 }

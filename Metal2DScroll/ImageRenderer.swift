@@ -20,7 +20,7 @@ class ImageRenderer: Renderer {
 
 	typealias VertexType = Vertex
 
-	static var deviceRendererTable = NSMapTable<MTLDevice, ImageRenderer>.weakToStrongObjects()
+	private static var deviceRendererTable = NSMapTable<MTLDevice, ImageRenderer>.weakToStrongObjects()
 	
 	class func imageRenderer(for device: MTLDevice) -> ImageRenderer {
 		if let renderer = ImageRenderer.deviceRendererTable.object(forKey: device) {
@@ -31,13 +31,14 @@ class ImageRenderer: Renderer {
 		return renderer
 	}
 
+	// MARK: -
 
 	struct Vertex {
 		var x, y, z, w, u, v: Float
 	}
 
 	struct Uniforms {
-		var modelViewProjectionMatrix: GLKMatrix4
+		var transform: GLKMatrix4
 	}
 
 
@@ -49,18 +50,25 @@ class ImageRenderer: Renderer {
 		self.device = device
 	}
 
-	func verticesForRect(_ rect: Rect) -> [Vertex] {
-		let l = rect.minX
-		let r = rect.maxX
-		let t = rect.minY
-		let b = rect.maxY
+	func vertices(for rect: Rect) -> [Vertex] {
+		print("rect=\(rect)")
+		let (l, r, t, b) = (rect.minX, rect.maxX, rect.maxY, rect.minY)
+//		let (l, r, t, b) = (rect.minX, rect.maxX, rect.minY, rect.maxY)
+
+		//	vertex	(y)		texture	(v)
+		//	1---4	(1) 		a---d 	(0)
+		//	|	|			|	|
+		//	2---3 	(0)		b---c 	(1)
+		//
+
 		return [
-			Vertex(x: l, y: t, z: 0, w: 1, u: 0, v: 1),
-			Vertex(x: l, y: b, z: 0, w: 1, u: 0, v: 0),
-			Vertex(x: r, y: b, z: 0, w: 1, u: 1, v: 0),
-			Vertex(x: l, y: t, z: 0, w: 1, u: 0, v: 1),
-			Vertex(x: r, y: b, z: 0, w: 1, u: 1, v: 0),
-			Vertex(x: r, y: t, z: 0, w: 1, u: 1, v: 1),
+			Vertex(x: l, y: t, z: 0, w: 1, u: 0, v: 0),		// 1, a
+			Vertex(x: l, y: b, z: 0, w: 1, u: 0, v: 1),		// 2, b
+			Vertex(x: r, y: b, z: 0, w: 1, u: 1, v: 1),		// 3, c
+
+			Vertex(x: l, y: t, z: 0, w: 1, u: 0, v: 0),		// 1, a
+			Vertex(x: r, y: b, z: 0, w: 1, u: 1, v: 1),		// 3, c
+			Vertex(x: r, y: t, z: 0, w: 1, u: 1, v: 0),		// 4, d
 		]
 	}
 
@@ -109,22 +117,21 @@ class ImageRenderer: Renderer {
 		return try! self.device.makeRenderPipelineState(descriptor: renderPipelineDescriptor)
 	}()
 
-	func vertexBuffer(for rect: Rect) -> VertexBuffer<Vertex>? {
-		let verticies = self.verticesForRect(rect)
-		return VertexBuffer<Vertex>(device: device, verticies: verticies)
+	func vertexBuffer(for vertices: [Vertex]) -> VertexBuffer<Vertex>? {
+		return VertexBuffer<Vertex>(device: device, vertices: vertices)
 	}
 
 	func renderImage(context: RenderContext, texture: MTLTexture, vertexBuffer: VertexBuffer<Vertex>) {
 		let transform = context.transform
-		var uniforms = Uniforms(modelViewProjectionMatrix: transform)
+		var uniforms = Uniforms(transform: transform)
 		let uniformsBuffer = device.makeBuffer(bytes: &uniforms, length: MemoryLayout<Uniforms>.size, options: MTLResourceOptions())
-		
 		
 		let commandEncoder = context.commandEncoder
 		commandEncoder.setRenderPipelineState(self.renderPipelineState)
 
-		commandEncoder.setFrontFacing(.counterClockwise)
-		commandEncoder.setCullMode(.back)
+//		commandEncoder.setFrontFacing(.counterClockwise)
+		commandEncoder.setFrontFacing(.clockwise)
+//		commandEncoder.setCullMode(.back)
 		commandEncoder.setVertexBuffer(vertexBuffer.buffer, offset: 0, at: 0)
 		commandEncoder.setVertexBuffer(uniformsBuffer, offset: 0, at: 1)
 

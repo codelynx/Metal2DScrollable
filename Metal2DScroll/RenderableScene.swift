@@ -13,14 +13,19 @@ import GLKit
 
 class RenderableScene {
 
+	let device: MTLDevice
 	var contentSize: CGSize
 
 	var bounds: CGRect {
 		return CGRect(x: 0, y: 0, width: contentSize.width, height: contentSize.height)
 	}
 	
-	init(contentSize: CGSize) {
+	init?(device: MTLDevice, contentSize: CGSize) {
+		self.device = device
 		self.contentSize = contentSize
+	}
+
+	func didMove(to view: RenderableView) {
 	}
 
 	func draw(in context: CGContext) {

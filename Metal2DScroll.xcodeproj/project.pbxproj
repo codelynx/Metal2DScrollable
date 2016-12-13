@@ -33,6 +33,9 @@
 		CC77EE121DFDEC0F001E8F77 /* ImageRenderable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC77EE111DFDEC0F001E8F77 /* ImageRenderable.swift */; };
 		CC77EE141DFDF109001E8F77 /* RenderContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC77EE131DFDF109001E8F77 /* RenderContext.swift */; };
 		CC77EE161DFDF2CB001E8F77 /* BlueMarble.png in Resources */ = {isa = PBXBuildFile; fileRef = CC77EE151DFDF2CB001E8F77 /* BlueMarble.png */; };
+		CCE49B0A1E0018AB0016111C /* ColorRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCE49B081E0018AB0016111C /* ColorRenderer.swift */; };
+		CCE49B0B1E0018AB0016111C /* ColorShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = CCE49B091E0018AB0016111C /* ColorShaders.metal */; };
+		CCE49B0D1E001BD90016111C /* ColorRenderable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCE49B0C1E001BD90016111C /* ColorRenderable.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -66,6 +69,9 @@
 		CC77EE111DFDEC0F001E8F77 /* ImageRenderable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageRenderable.swift; sourceTree = "<group>"; };
 		CC77EE131DFDF109001E8F77 /* RenderContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RenderContext.swift; sourceTree = "<group>"; };
 		CC77EE151DFDF2CB001E8F77 /* BlueMarble.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BlueMarble.png; sourceTree = "<group>"; };
+		CCE49B081E0018AB0016111C /* ColorRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorRenderer.swift; sourceTree = "<group>"; };
+		CCE49B091E0018AB0016111C /* ColorShaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = ColorShaders.metal; sourceTree = "<group>"; };
+		CCE49B0C1E001BD90016111C /* ColorRenderable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorRenderable.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +122,12 @@
 				CC0CFC8E1DFC306B0090F17B /* AppDelegate.swift */,
 				CC0CFC971DFC306B0090F17B /* Assets.xcassets */,
 				CC77EE151DFDF2CB001E8F77 /* BlueMarble.png */,
+				CC0506551DFEBBDA00A9E7A2 /* CanvasScene.swift */,
+				CC0506571DFEBD2A00A9E7A2 /* CanvasViewController.swift */,
+				CCE49B0C1E001BD90016111C /* ColorRenderable.swift */,
+				CCE49B081E0018AB0016111C /* ColorRenderer.swift */,
+				CCE49B091E0018AB0016111C /* ColorShaders.metal */,
+				CC0506591DFEDE3F00A9E7A2 /* CoreGraphics+Z.swift */,
 				CC77EE0D1DFDEA39001E8F77 /* GeoUtils.swift */,
 				CC77EE111DFDEC0F001E8F77 /* ImageRenderable.swift */,
 				CC77EE091DFDE991001E8F77 /* ImageRenderer.swift */,
@@ -129,15 +141,12 @@
 				CC0506531DFEB0B000A9E7A2 /* RenderableContentView.swift */,
 				CC0506511DFEB04A00A9E7A2 /* RenderableDrawView.swift */,
 				CC05064D1DFE9C2800A9E7A2 /* RenderableScene.swift */,
-				CC0506551DFEBBDA00A9E7A2 /* CanvasScene.swift */,
 				CC05064F1DFE9D0200A9E7A2 /* RenderableView.swift */,
-				CC0506571DFEBD2A00A9E7A2 /* CanvasViewController.swift */,
 				CC77EE131DFDF109001E8F77 /* RenderContext.swift */,
 				CC05064B1DFE9A4F00A9E7A2 /* Renderer.swift */,
 				CC0CFC921DFC306B0090F17B /* Shaders.metal */,
-				CC77EE0F1DFDEAAD001E8F77 /* VertexBuffer.swift */,
-				CC0506591DFEDE3F00A9E7A2 /* CoreGraphics+Z.swift */,
 				CC05065B1DFEDFCF00A9E7A2 /* UIView+Z.swift */,
+				CC77EE0F1DFDEAAD001E8F77 /* VertexBuffer.swift */,
 			);
 			path = Metal2DScroll;
 			sourceTree = "<group>";
@@ -224,15 +233,18 @@
 				CC0506581DFEBD2A00A9E7A2 /* CanvasViewController.swift in Sources */,
 				CC77EE041DFC69F3001E8F77 /* OvalView.swift in Sources */,
 				CC05064C1DFE9A4F00A9E7A2 /* Renderer.swift in Sources */,
+				CCE49B0B1E0018AB0016111C /* ColorShaders.metal in Sources */,
 				CC0CFC8F1DFC306B0090F17B /* AppDelegate.swift in Sources */,
 				CC05064E1DFE9C2800A9E7A2 /* RenderableScene.swift in Sources */,
 				CC05064A1DFE99FD00A9E7A2 /* Renderable.swift in Sources */,
 				CC77EE101DFDEAAD001E8F77 /* VertexBuffer.swift in Sources */,
+				CCE49B0A1E0018AB0016111C /* ColorRenderer.swift in Sources */,
 				CC77EE121DFDEC0F001E8F77 /* ImageRenderable.swift in Sources */,
 				CC77EE141DFDF109001E8F77 /* RenderContext.swift in Sources */,
 				CC77EE0E1DFDEA39001E8F77 /* GeoUtils.swift in Sources */,
 				CC05065A1DFEDE3F00A9E7A2 /* CoreGraphics+Z.swift in Sources */,
 				CC0506501DFE9D0200A9E7A2 /* RenderableView.swift in Sources */,
+				CCE49B0D1E001BD90016111C /* ColorRenderable.swift in Sources */,
 				CC77EE0A1DFDE991001E8F77 /* ImageRenderer.swift in Sources */,
 				CC0506521DFEB04A00A9E7A2 /* RenderableDrawView.swift in Sources */,
 			);

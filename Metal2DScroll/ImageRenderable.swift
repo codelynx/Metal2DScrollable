@@ -40,43 +40,28 @@ class ImageRenderable: Renderable {
 
 	var image: XImage
 	var frame: Rect
-	fileprivate var _vertexBuffer: VertexBuffer<ImageVertex>?
-	fileprivate var _texture: MTLTexture?
+	let texture: MTLTexture
+	let renderer: ImageRenderer
+	var vertexBuffer: VertexBuffer<ImageVertex>
 
-	init(device: MTLDevice, image: XImage, frame: Rect) {
+	init?(device: MTLDevice, image: XImage, frame: Rect) {
+		guard let cgImage = image.cgImage else { return nil }
+		guard let texture = try? device.textureLoader.newTexture(with: cgImage, options: nil) else { return nil }
+		let renderer = ImageRenderer.imageRenderer(for: device)
+		let vertices = renderer.vertices(for: frame)
+		guard let vertexBuffer = renderer.vertexBuffer(for: vertices) else { return nil }
+
 		self.device = device
 		self.image = image
 		self.frame = frame
+		self.texture = texture
+		self.renderer = renderer
+		self.vertexBuffer = vertexBuffer
 	}
 
-	var texture: MTLTexture? {
-		if _texture == nil {
-			if let image = self.image.cgImage {
-				do { _texture = try self.device.textureLoader.newTexture(with: image, options: nil) }
-				catch let error { print("\(error)") }
-			}
-		}
-		return _texture
-	}
-
-	var imageRenderer: ImageRenderer {
-		return ImageRenderer.imageRenderer(for: self.device)
-	}
-
-	var vertexBuffer: VertexBuffer<ImageVertex>? {
-		if _vertexBuffer == nil {
-			let renderer = self.imageRenderer
-			_vertexBuffer = renderer.vertexBuffer(for: self.frame)
-		}
-		return _vertexBuffer
-	}
-
-
-	func render(_ context: RenderContext) {
-		let renderer = self.imageRenderer
-		if let texture = self.texture, let vertexBuffer = self.vertexBuffer {
-			renderer.renderImage(context: context, texture: texture, vertexBuffer: vertexBuffer)
-		}
+	func render(context: RenderContext) {
+		print("ImageRenderable: render()")
+		self.renderer.renderImage(context: context, texture: texture, vertexBuffer: vertexBuffer)
 	}
 	
 }

@@ -20,12 +20,12 @@ class VertexBuffer<T> {
 	var count: Int
 	var capacity: Int
 
-	init(device: MTLDevice, verticies: [T], capacity: Int? = nil) {
+	init(device: MTLDevice, vertices: [T], capacity: Int? = nil) {
 		self.device = device
-		self.count = verticies.count
-		self.capacity = capacity ?? verticies.count
+		self.count = vertices.count
+		self.capacity = capacity ?? vertices.count
 		let length = MemoryLayout<T>.size * self.capacity
-		self.buffer = device.makeBuffer(bytes: verticies, length: length, options: MTLResourceOptions())
+		self.buffer = device.makeBuffer(bytes: vertices, length: length, options: MTLResourceOptions())
 		assert(self.count <= self.capacity)
 		/*
 		let vertexArray = UnsafeMutablePointer<T>(self.buffer.contents())
