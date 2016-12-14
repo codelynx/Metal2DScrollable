@@ -64,6 +64,8 @@ class RenderableView: UIView, MTKViewDelegate {
 		scrollView.maximumZoomScale = 4.0
 		scrollView.minimumZoomScale = 1.0
 		scrollView.autoresizesSubviews = false
+		scrollView.delaysContentTouches = false
+		scrollView.panGestureRecognizer.minimumNumberOfTouches = 2
 		self.addSubviewToFit(scrollView)
 		scrollView.addSubview(self.contentView)
 		self.contentView.frame = self.bounds
@@ -80,9 +82,11 @@ class RenderableView: UIView, MTKViewDelegate {
 
 	private (set) lazy var contentView: RenderableContentView = {
 		let renderableContentView = RenderableContentView(frame: self.bounds)
+		renderableContentView.renderableView = self
 		//renderableContentView.image = UIImage(named: "BlueMarble.png")
 		renderableContentView.backgroundColor = UIColor.clear
 		renderableContentView.translatesAutoresizingMaskIntoConstraints = false
+		renderableContentView.isUserInteractionEnabled = true
 		return renderableContentView
 	}()
 
@@ -119,13 +123,13 @@ class RenderableView: UIView, MTKViewDelegate {
 		let commandEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor)
 	
 		let targetRect = contentView.convert(self.contentView.bounds, to: self.mtkView)
-		let transform0 = CGAffineTransform.identity.translatedBy(x: 0, y: contentView.bounds.height).scaledBy(x: 1, y: -1)
-//		let transform0 = CGAffineTransform.identity
+//		let transform0 = CGAffineTransform.identity.translatedBy(x: 0, y: contentView.bounds.height).scaledBy(x: 1, y: -1)
+		let transform0 = CGAffineTransform.identity
 		let transform1 = renderableScene.bounds.transform(to: targetRect)
 		let transform2 = self.mtkView.bounds.transform(to: CGRect(x: -1.0, y: -1.0, width: 2.0, height: 2.0))
 //		let transform2 = self.mtkView.bounds.transform(to: CGRect(x: 1.0, y: 1.0, width: -2.0, height: -2.0))
-//		let transform3 = CGAffineTransform.identity.translatedBy(x: 0, y: 2.0) //.scaledBy(x: 1, y: -1)
-		let transform3 = CGAffineTransform.identity
+		let transform3 = CGAffineTransform.identity.translatedBy(x: 0, y: +1).scaledBy(x: 1, y: -1).translatedBy(x: 0, y: 1)
+//		let transform3 = CGAffineTransform.identity
 		let transform = GLKMatrix4(transform0 * transform1 * transform2 * transform3)
 //		let transform = GLKMatrix4Identity
 		let renderContext = RenderContext(commandEncoder: commandEncoder, transform: transform)

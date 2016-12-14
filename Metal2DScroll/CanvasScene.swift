@@ -29,6 +29,15 @@ class CanvasScene: RenderableScene {
 		return ColorTriangleRenderable(device: self.device, point1: pt1, point2: pt2, point3: pt3)
 	}()
 
+	lazy var brushTexture: MTLTexture = {
+		let image = UIImage(named: "Particle.png")!
+		let texture = try! self.device.textureLoader.newTexture(with: image.cgImage!, options: nil)
+		return texture
+	}()
+
+	var brushStrokes = [StrokeRenderable]()
+	var touchStrokes = [UITouch: StrokeRenderable]()
+
 	override init?(device: MTLDevice, contentSize: CGSize) {
 		super.init(device: device, contentSize: contentSize)
 	}
@@ -47,8 +56,53 @@ class CanvasScene: RenderableScene {
 
 	override func render(in context: RenderContext) {
 		self.imageRenderable?.render(context: context)
-		self.colorRect?.render(context: context)
+//		self.colorRect?.render(context: context)
 		self.colorTriangle?.render(context: context)
+	}
+
+	func strokeVertex(touch: UITouch, in view: UIView) -> StrokeVertex {
+		let point = touch.location(in: view)
+		return StrokeVertex(x: Float(point.x), y: Float(point.y), z: 0, force: 1, altitudeAngle: 0, azimuthAngle: 0, velocity: 1, angle: 1)
+	}
+
+	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?, contentView: UIView) {
+		print("touchesBegan")
+		for touch in touches {
+			let point = touch.location(in: contentView)
+			let vertex = self.strokeVertex(touch: touch, in: contentView)
+			let stroke = StrokeRenderable(device: self.device, texture: self.brushTexture, vertices: [vertex])
+			touchStrokes[touch] = stroke
+			print("\(point)")
+		}
+	}
+	
+	override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?, contentView: UIView) {
+		print("touchesMoved")
+		guard let event = event else { return }
+		for touch in touches {
+			guard let stroke = self.touchStrokes[touch] else { continue }
+			for coalescedTouch in event.coalescedTouches(for: touch) ?? [] {
+				let vertex = self.strokeVertex(touch: coalescedTouch, in: contentView)
+				
+			}
+			let point = touch.location(in: contentView)
+			print("\(point)")
+		}
+	}
+	
+	override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?, contentView: UIView) {
+		print("touchesEnded")
+		for touch in touches {
+			let point = touch.location(in: contentView)
+			print("\(point)")
+		}
+	}
+	
+	override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?, contentView: UIView) {
+		for touch in touches {
+			let point = touch.location(in: contentView)
+			print("\(point)")
+		}
 	}
 	
 }

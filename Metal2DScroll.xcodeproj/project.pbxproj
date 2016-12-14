@@ -25,6 +25,10 @@
 		CC0CFC961DFC306B0090F17B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC0CFC941DFC306B0090F17B /* Main.storyboard */; };
 		CC0CFC981DFC306B0090F17B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CC0CFC971DFC306B0090F17B /* Assets.xcassets */; };
 		CC0CFC9B1DFC306B0090F17B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC0CFC991DFC306B0090F17B /* LaunchScreen.storyboard */; };
+		CC7473BC1E00D58100E55064 /* StrokeShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = CC7473BB1E00D58100E55064 /* StrokeShaders.metal */; };
+		CC7473BE1E00D59500E55064 /* StrokeRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC7473BD1E00D59500E55064 /* StrokeRenderer.swift */; };
+		CC7473C01E00D6F600E55064 /* StrokeRenderable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC7473BF1E00D6F600E55064 /* StrokeRenderable.swift */; };
+		CC7473C21E00E42A00E55064 /* Particle.png in Resources */ = {isa = PBXBuildFile; fileRef = CC7473C11E00E42A00E55064 /* Particle.png */; };
 		CC77EE041DFC69F3001E8F77 /* OvalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC77EE031DFC69F3001E8F77 /* OvalView.swift */; };
 		CC77EE0A1DFDE991001E8F77 /* ImageRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC77EE091DFDE991001E8F77 /* ImageRenderer.swift */; };
 		CC77EE0C1DFDE9AF001E8F77 /* ImageShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = CC77EE0B1DFDE9AF001E8F77 /* ImageShaders.metal */; };
@@ -60,6 +64,10 @@
 		CC0CFC971DFC306B0090F17B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CC0CFC9A1DFC306B0090F17B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CC0CFC9C1DFC306B0090F17B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CC7473BB1E00D58100E55064 /* StrokeShaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = StrokeShaders.metal; sourceTree = "<group>"; };
+		CC7473BD1E00D59500E55064 /* StrokeRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StrokeRenderer.swift; sourceTree = "<group>"; };
+		CC7473BF1E00D6F600E55064 /* StrokeRenderable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StrokeRenderable.swift; sourceTree = "<group>"; };
+		CC7473C11E00E42A00E55064 /* Particle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Particle.png; sourceTree = "<group>"; };
 		CC77EE031DFC69F3001E8F77 /* OvalView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OvalView.swift; sourceTree = "<group>"; };
 		CC77EE051DFD7FD7001E8F77 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		CC77EE091DFDE991001E8F77 /* ImageRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageRenderer.swift; sourceTree = "<group>"; };
@@ -137,6 +145,7 @@
 				CC0CFC941DFC306B0090F17B /* Main.storyboard */,
 				CC0CFC901DFC306B0090F17B /* Metal2DViewController.swift */,
 				CC77EE031DFC69F3001E8F77 /* OvalView.swift */,
+				CC7473C11E00E42A00E55064 /* Particle.png */,
 				CC0506491DFE99FD00A9E7A2 /* Renderable.swift */,
 				CC0506531DFEB0B000A9E7A2 /* RenderableContentView.swift */,
 				CC0506511DFEB04A00A9E7A2 /* RenderableDrawView.swift */,
@@ -145,6 +154,9 @@
 				CC77EE131DFDF109001E8F77 /* RenderContext.swift */,
 				CC05064B1DFE9A4F00A9E7A2 /* Renderer.swift */,
 				CC0CFC921DFC306B0090F17B /* Shaders.metal */,
+				CC7473BF1E00D6F600E55064 /* StrokeRenderable.swift */,
+				CC7473BD1E00D59500E55064 /* StrokeRenderer.swift */,
+				CC7473BB1E00D58100E55064 /* StrokeShaders.metal */,
 				CC05065B1DFEDFCF00A9E7A2 /* UIView+Z.swift */,
 				CC77EE0F1DFDEAAD001E8F77 /* VertexBuffer.swift */,
 			);
@@ -215,6 +227,7 @@
 				CC0CFC9B1DFC306B0090F17B /* LaunchScreen.storyboard in Resources */,
 				CC0CFC981DFC306B0090F17B /* Assets.xcassets in Resources */,
 				CC0CFC961DFC306B0090F17B /* Main.storyboard in Resources */,
+				CC7473C21E00E42A00E55064 /* Particle.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -239,13 +252,16 @@
 				CC05064A1DFE99FD00A9E7A2 /* Renderable.swift in Sources */,
 				CC77EE101DFDEAAD001E8F77 /* VertexBuffer.swift in Sources */,
 				CCE49B0A1E0018AB0016111C /* ColorRenderer.swift in Sources */,
+				CC7473BE1E00D59500E55064 /* StrokeRenderer.swift in Sources */,
 				CC77EE121DFDEC0F001E8F77 /* ImageRenderable.swift in Sources */,
 				CC77EE141DFDF109001E8F77 /* RenderContext.swift in Sources */,
+				CC7473BC1E00D58100E55064 /* StrokeShaders.metal in Sources */,
 				CC77EE0E1DFDEA39001E8F77 /* GeoUtils.swift in Sources */,
 				CC05065A1DFEDE3F00A9E7A2 /* CoreGraphics+Z.swift in Sources */,
 				CC0506501DFE9D0200A9E7A2 /* RenderableView.swift in Sources */,
 				CCE49B0D1E001BD90016111C /* ColorRenderable.swift in Sources */,
 				CC77EE0A1DFDE991001E8F77 /* ImageRenderer.swift in Sources */,
+				CC7473C01E00D6F600E55064 /* StrokeRenderable.swift in Sources */,
 				CC0506521DFEB04A00A9E7A2 /* RenderableDrawView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
