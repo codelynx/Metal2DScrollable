@@ -25,7 +25,7 @@ class RenderableScene {
 		self.contentSize = contentSize
 	}
 
-	func didMove(to view: RenderableView) {
+	func didMove(to view: RenderView) {
 	}
 
 	func draw(in context: CGContext) {

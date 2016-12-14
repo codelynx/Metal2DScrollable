@@ -42,16 +42,16 @@ class CanvasScene: RenderableScene {
 		super.init(device: device, contentSize: contentSize)
 	}
 
-	override func didMove(to view: RenderableView) {
+	override func didMove(to view: RenderView) {
 		super.didMove(to: view)
 	}
 
 	override func draw(in context: CGContext) {
 
 //		image.draw(in: self.bounds)
-//		context.setFillColor(UIColor.blue.withAlphaComponent(0.25).cgColor)
+		context.setFillColor(UIColor.blue.withAlphaComponent(0.25).cgColor)
 //		context.fillEllipse(in: self.bounds)
-//		context.fillEllipse(in: CGRect(x: 0, y: 512, width: 1024, height: 512))
+		context.fillEllipse(in: CGRect(x: 0, y: 0, width: 2048, height: 1024))
 	}
 
 	override func render(in context: RenderContext) {

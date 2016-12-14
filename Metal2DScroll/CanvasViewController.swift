@@ -10,16 +10,16 @@ import UIKit
 
 class CanvasViewController: UIViewController {
 
-	@IBOutlet weak var renderableView: RenderableView!
+	@IBOutlet weak var renderView: RenderView!
 
 	var canvasScene: CanvasScene?
 
 	override func viewDidLoad() {
-		assert(renderableView != nil)
+		assert(renderView != nil)
 		super.viewDidLoad()
-		let device = self.renderableView.device
+		let device = self.renderView.device
 		self.canvasScene = CanvasScene(device: device, contentSize: CGSize(width: 2048, height: 1024))
-		self.renderableView.renderableScene = self.canvasScene
+		self.renderView.renderableScene = self.canvasScene
 	}
 
 	override func didReceiveMemoryWarning() {

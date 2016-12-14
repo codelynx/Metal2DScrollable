@@ -1,5 +1,5 @@
 //
-//  RenderableContentView.swift
+//  RenderContentView.swift
 //  Metal2DScroll
 //
 //  Created by Kaz Yoshikawa on 12/12/16.
@@ -8,12 +8,12 @@
 
 import UIKit
 
-class RenderableContentView: UIView {
+class RenderContentView: UIView {
 
-	weak var renderableView: RenderableView?
+	weak var renderView: RenderView?
 
 	var contentSize: CGSize? {
-		return self.renderableView?.renderableScene?.contentSize
+		return self.renderView?.renderableScene?.contentSize
 	}
 
 	override func draw(_ rect: CGRect) {
@@ -39,24 +39,24 @@ class RenderableContentView: UIView {
 	*/
 
 	override func layoutSubviews() {
-		print("RenderableContentView: \(self.bounds)")
+		print("RenderContentView: \(self.bounds)")
 		super.layoutSubviews()
 	}
 
 	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-		renderableView?.renderableScene?.touchesBegan(touches, with: event, contentView: self)
+		renderView?.renderableScene?.touchesBegan(touches, with: event, contentView: self)
 	}
 	
 	override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-		renderableView?.renderableScene?.touchesMoved(touches, with: event, contentView: self)
+		renderView?.renderableScene?.touchesMoved(touches, with: event, contentView: self)
 	}
 	
 	override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-		renderableView?.renderableScene?.touchesEnded(touches, with: event, contentView: self)
+		renderView?.renderableScene?.touchesEnded(touches, with: event, contentView: self)
 	}
 	
 	override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-		renderableView?.renderableScene?.touchesCancelled(touches, with: event, contentView: self)
+		renderView?.renderableScene?.touchesCancelled(touches, with: event, contentView: self)
 	}
 
 }

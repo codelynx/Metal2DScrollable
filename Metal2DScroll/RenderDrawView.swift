@@ -1,5 +1,5 @@
 //
-//  RenderableDrawView.swift
+//  RenderDrawView.swift
 //  Metal2DScroll
 //
 //  Created by Kaz Yoshikawa on 12/12/16.
@@ -8,21 +8,21 @@
 
 import UIKit
 
-class RenderableDrawView: UIView {
+class RenderDrawView: UIView {
 
-	var renderableView: RenderableView?
+	var renderView: RenderView?
 	
-	var contentView: RenderableContentView? {
-		return self.renderableView?.contentView
+	var contentView: RenderContentView? {
+		return self.renderView?.contentView
 	}
 
 	override func layoutSubviews() {
 		super.layoutSubviews()
-		assert(renderableView != nil)
+		assert(renderView != nil)
 	}
 
 	override func draw(_ layer: CALayer, in context: CGContext) {
-		if let contentView = contentView, let renderableScene = renderableView?.renderableScene  {
+		if let contentView = contentView, let renderableScene = renderView?.renderableScene  {
 			let targetRect = contentView.convert(contentView.bounds, to: self)
 			let transform = renderableScene.bounds.transform(to: targetRect)
 			context.concatenate(transform)

@@ -1,5 +1,5 @@
 //
-//  RenderableView.swift
+//  RenderView.swift
 //  Metal2DScroll
 //
 //  Created by Kaz Yoshikawa on 12/12/16.
@@ -11,7 +11,7 @@ import MetalKit
 import GLKit
 
 
-class RenderableView: UIView, MTKViewDelegate {
+class RenderView: UIView, MTKViewDelegate {
 
 	var renderableScene: RenderableScene? {
 		didSet {
@@ -72,17 +72,17 @@ class RenderableView: UIView, MTKViewDelegate {
 		return scrollView
 	}()
 
-	private (set) lazy var drawView: RenderableDrawView = {
-		let drawView = RenderableDrawView(frame: self.bounds)
+	private (set) lazy var drawView: RenderDrawView = {
+		let drawView = RenderDrawView(frame: self.bounds)
 		drawView.backgroundColor = UIColor.clear
-		drawView.renderableView = self
+		drawView.renderView = self
 		self.addSubviewToFit(drawView)
 		return drawView
 	}()
 
-	private (set) lazy var contentView: RenderableContentView = {
-		let renderableContentView = RenderableContentView(frame: self.bounds)
-		renderableContentView.renderableView = self
+	private (set) lazy var contentView: RenderContentView = {
+		let renderableContentView = RenderContentView(frame: self.bounds)
+		renderableContentView.renderView = self
 		//renderableContentView.image = UIImage(named: "BlueMarble.png")
 		renderableContentView.backgroundColor = UIColor.clear
 		renderableContentView.translatesAutoresizingMaskIntoConstraints = false
@@ -152,7 +152,7 @@ class RenderableView: UIView, MTKViewDelegate {
 }
 
 
-extension RenderableView: UIScrollViewDelegate {
+extension RenderView: UIScrollViewDelegate {
 
 	func viewForZooming(in scrollView: UIScrollView) -> UIView? {
 		return self.contentView
