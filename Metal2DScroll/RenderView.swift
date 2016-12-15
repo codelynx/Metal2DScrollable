@@ -138,6 +138,22 @@ class RenderView: UIView, MTKViewDelegate {
 	func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
 	}
 
+	// MARK: -
+	
+	var minimumNumberOfTouchesToScroll: Int {
+		get { return self.scrollView.panGestureRecognizer.minimumNumberOfTouches }
+		set { self.scrollView.panGestureRecognizer.minimumNumberOfTouches = newValue }
+	}
+	
+	var scrollEnabled: Bool {
+		get { return self.scrollView.isScrollEnabled }
+		set { self.scrollView.isScrollEnabled = newValue }
+	}
+	
+	var delaysContentTouches: Bool {
+		get { return self.scrollView.delaysContentTouches }
+		set { self.scrollView.delaysContentTouches = newValue }
+	}
 }
 
 

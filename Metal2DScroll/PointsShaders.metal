@@ -12,13 +12,6 @@ using namespace metal;
 
 struct VertexIn {
 	packed_float2 position [[ attribute(0) ]];
-//	float force;
-//	float altitudeAngle;
-//
-//	float azimuthAngle;
-//	float velocity;
-//	float angle;
-//	float unused;
 };
 
 struct VertexOut {
