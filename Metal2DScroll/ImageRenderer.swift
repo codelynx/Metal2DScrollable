@@ -1,8 +1,8 @@
 //
-//  ImageRenderer.swift
-//  Metal2D
+//	ImageRenderer.swift
+//	Metal2DScroll
 //
-//  Created by Kaz Yoshikawa on 12/22/15.
+//	Created by Kaz Yoshikawa on 12/22/15.
 //
 //
 
@@ -44,34 +44,19 @@ class ImageRenderer: Renderer {
 
 	let device: MTLDevice
 	
-	var colorSamplerState: MTLSamplerState!
 
 	init(device: MTLDevice) {
 		self.device = device
 	}
 
 	func vertices(for rect: Rect) -> [Vertex] {
-		print("rect=\(rect)")
 		let (l, r, t, b) = (rect.minX, rect.maxX, rect.maxY, rect.minY)
-//		let (l, r, t, b) = (rect.minX, rect.maxX, rect.minY, rect.maxY)
 
-/*
 		//	vertex	(y)		texture	(v)
 		//	1---4	(1) 		a---d 	(0)
 		//	|	|			|	|
 		//	2---3 	(0)		b---c 	(1)
 		//
-
-		return [
-			Vertex(x: l, y: t, z: 0, w: 1, u: 0, v: 0),		// 1, a
-			Vertex(x: l, y: b, z: 0, w: 1, u: 0, v: 1),		// 2, b
-			Vertex(x: r, y: b, z: 0, w: 1, u: 1, v: 1),		// 3, c
-
-			Vertex(x: l, y: t, z: 0, w: 1, u: 0, v: 0),		// 1, a
-			Vertex(x: r, y: b, z: 0, w: 1, u: 1, v: 1),		// 3, c
-			Vertex(x: r, y: t, z: 0, w: 1, u: 1, v: 0),		// 4, d
-		]
-*/
 
 		return [
 			Vertex(x: l, y: t, z: 0, w: 1, u: 0, v: 0),		// 1, a
@@ -119,15 +104,19 @@ class ImageRenderer: Renderer {
 		renderPipelineDescriptor.colorAttachments[0].destinationRGBBlendFactor = .oneMinusSourceAlpha
 		renderPipelineDescriptor.colorAttachments[0].destinationAlphaBlendFactor = .oneMinusSourceAlpha
 
+
+		return try! self.device.makeRenderPipelineState(descriptor: renderPipelineDescriptor)
+	}()
+
+	lazy var colorSamplerState: MTLSamplerState = {
 		let samplerDescriptor = MTLSamplerDescriptor()
 		samplerDescriptor.minFilter = .nearest
 		samplerDescriptor.magFilter = .linear
 		samplerDescriptor.sAddressMode = .repeat
 		samplerDescriptor.tAddressMode = .repeat
-		self.colorSamplerState = self.device.makeSamplerState(descriptor: samplerDescriptor)
-
-		return try! self.device.makeRenderPipelineState(descriptor: renderPipelineDescriptor)
+		return self.device.makeSamplerState(descriptor: samplerDescriptor)
 	}()
+
 
 	func vertexBuffer(for vertices: [Vertex]) -> VertexBuffer<Vertex>? {
 		return VertexBuffer<Vertex>(device: device, vertices: vertices)

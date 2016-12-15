@@ -1,9 +1,9 @@
 //
-//  StrokeShaders.metal
-//  Metal2D
+//	PointsShaders.metal
+//	Metal2DScroll
 //
-//  Created by Kaz Yoshikawa on 1/11/16.
-//
+//	Created by Kaz Yoshikawa on 1/11/16.
+//	Copyright © 2016 Electricwoods LLC. All rights reserved.
 //
 
 #include <metal_stdlib>
@@ -12,13 +12,13 @@ using namespace metal;
 
 struct VertexIn {
 	packed_float2 position [[ attribute(0) ]];
-	float force;
-	float altitudeAngle;
-
-	float azimuthAngle;
-	float velocity;
-	float angle;
-	float unused;
+//	float force;
+//	float altitudeAngle;
+//
+//	float azimuthAngle;
+//	float velocity;
+//	float angle;
+//	float unused;
 };
 
 struct VertexOut {
@@ -30,7 +30,7 @@ struct Uniforms {
 	float4x4 transform;
 };
 
-vertex VertexOut stroke_vertex(
+vertex VertexOut points_vertex(
 	device VertexIn * vertices [[ buffer(0) ]],
 	constant Uniforms & uniforms [[ buffer(1) ]],
 	uint vid [[ vertex_id ]]
@@ -39,11 +39,11 @@ vertex VertexOut stroke_vertex(
 	VertexOut outVertex;
 	
 	outVertex.position = uniforms.transform * float4(inVertex.position, 0.0, 1.0);
-	outVertex.pointSize = 16;
+	outVertex.pointSize = 32;
 	return outVertex;
 }
 
-fragment float4 stroke_fragment(
+fragment float4 points_fragment(
 	VertexOut vertexIn [[ stage_in ]],
 	texture2d<float, access::sample> colorTexture [[ texture(0) ]],
 	sampler colorSampler [[ sampler(0) ]],

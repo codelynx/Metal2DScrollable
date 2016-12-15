@@ -1,8 +1,8 @@
 //
-//  ImageNode.swift
-//  Metal2D
+//	ImageRenderable.swift
+//	Metal2DScroll
 //
-//  Created by Kaz Yoshikawa on 1/11/16.
+//	Created by Kaz Yoshikawa on 1/11/16.
 //
 //
 
@@ -60,7 +60,6 @@ class ImageRenderable: Renderable {
 	}
 
 	func render(context: RenderContext) {
-		print("ImageRenderable: render()")
 		self.renderer.renderImage(context: context, texture: texture, vertexBuffer: vertexBuffer)
 	}
 	

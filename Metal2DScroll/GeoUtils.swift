@@ -1,8 +1,8 @@
 //
-//  GeoUtils.swift
-//  Metal2D
+//	GeoUtils.swift
+//	Metal2DScroll
 //
-//  Created by Kaz Yoshikawa on 1/4/16.
+//	Created by Kaz Yoshikawa on 1/4/16.
 //
 //
 

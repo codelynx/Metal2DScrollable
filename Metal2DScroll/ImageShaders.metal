@@ -1,8 +1,8 @@
 //
-//  ImageShaders.metal
-//  Metal2D
+//	ImageShaders.metal
+//	Metal2D
 //
-//  Created by Kaz Yoshikawa on 12/22/15.
+//	Created by Kaz Yoshikawa on 12/22/15.
 //
 //
 

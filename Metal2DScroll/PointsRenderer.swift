@@ -1,8 +1,8 @@
 //
-//  StrokeRenderer.swift
-//  Metal2D
+//	PointsRenderer.swift
+//	Metal2DScroll
 //
-//  Created by Kaz Yoshikawa on 1/11/16.
+//	Created by Kaz Yoshikawa on 1/11/16.
 //
 //
 
@@ -11,47 +11,32 @@ import CoreGraphics
 import QuartzCore
 import GLKit
 
-typealias StrokeVertex = StrokeRenderer.Vertex
+typealias PointVertex = PointsRenderer.Vertex
 
 //
-//	StrokeRenderer
+//	PointsRenderer
 //
 
-class StrokeRenderer: Renderer {
+class PointsRenderer: Renderer {
 
 	typealias VertexType = Vertex
 
 	// TODO: needs refactoring
 
-	private static var deviceRendererTable = NSMapTable<MTLDevice, StrokeRenderer>.weakToStrongObjects() // TODO: consider weak-to-weak?
+	private static var deviceRendererTable = NSMapTable<MTLDevice, PointsRenderer>.weakToStrongObjects() // TODO: consider weak-to-weak?
 
-	class func strokeRenderer(for device: MTLDevice) -> StrokeRenderer {
-		if let renderer = StrokeRenderer.deviceRendererTable.object(forKey: device) {
+	class func pointRenderer(for device: MTLDevice) -> PointsRenderer {
+		if let renderer = PointsRenderer.deviceRendererTable.object(forKey: device) {
 			return renderer
 		}
-		let renderer = StrokeRenderer(device: device)
-		StrokeRenderer.deviceRendererTable.setObject(renderer, forKey: device)
+		let renderer = PointsRenderer(device: device)
+		PointsRenderer.deviceRendererTable.setObject(renderer, forKey: device)
 		return renderer
 	}
 
 	struct Vertex {
 		var x: Float
 		var y: Float
-		var z: Float
-		var force: Float
-
-		var altitudeAngle: Float
-		var azimuthAngle: Float
-		var velocity: Float
-		var angle: Float
-		init(x: Float, y: Float, z: Float, force: Float, altitudeAngle: Float, azimuthAngle: Float, velocity: Float, angle: Float) {
-			self.x = x; self.y = y; self.z = z; self.force = force
-			self.altitudeAngle = altitudeAngle; self.azimuthAngle = azimuthAngle; self.velocity = velocity; self.angle = angle
-		}
-		init() {
-			self.x = 0; self.y = 0; self.z = 0; self.force = 0
-			self.altitudeAngle = 0; self.azimuthAngle = 0; self.velocity = 0; self.angle = 0
-		}
 	}
 
 	struct Uniforms {
@@ -60,7 +45,6 @@ class StrokeRenderer: Renderer {
 
 	let device: MTLDevice
 
-	var colorSamplerState: MTLSamplerState!
 
 	// MARK: -
 
@@ -86,10 +70,10 @@ class StrokeRenderer: Renderer {
 	lazy var renderPipelineState: MTLRenderPipelineState = {
 		let renderPipelineDescriptor = MTLRenderPipelineDescriptor()
 		renderPipelineDescriptor.vertexDescriptor = self.vertexDescriptor
-		renderPipelineDescriptor.vertexFunction = self.library.makeFunction(name: "stroke_vertex")!
-		renderPipelineDescriptor.fragmentFunction = self.library.makeFunction(name: "stroke_fragment")!
+		renderPipelineDescriptor.vertexFunction = self.library.makeFunction(name: "points_vertex")!
+		renderPipelineDescriptor.fragmentFunction = self.library.makeFunction(name: "points_fragment")!
 
-		renderPipelineDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm_srgb
+		renderPipelineDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm
 		renderPipelineDescriptor.colorAttachments[0].isBlendingEnabled = true
 		renderPipelineDescriptor.colorAttachments[0].rgbBlendOperation = .add
 		renderPipelineDescriptor.colorAttachments[0].alphaBlendOperation = .add
@@ -99,14 +83,17 @@ class StrokeRenderer: Renderer {
 		renderPipelineDescriptor.colorAttachments[0].destinationRGBBlendFactor = .oneMinusSourceAlpha
 		renderPipelineDescriptor.colorAttachments[0].destinationAlphaBlendFactor = .oneMinusSourceAlpha
 
+
+		return try! self.device.makeRenderPipelineState(descriptor: renderPipelineDescriptor)
+	}()
+
+	lazy var colorSamplerState: MTLSamplerState = {
 		let samplerDescriptor = MTLSamplerDescriptor()
 		samplerDescriptor.minFilter = .nearest
 		samplerDescriptor.magFilter = .linear
 		samplerDescriptor.sAddressMode = .repeat
 		samplerDescriptor.tAddressMode = .repeat
-		self.colorSamplerState = self.device.makeSamplerState(descriptor: samplerDescriptor)
-
-		return try! self.device.makeRenderPipelineState(descriptor: renderPipelineDescriptor)
+		return self.device.makeSamplerState(descriptor: samplerDescriptor)
 	}()
 	
 	func vertexBuffer(for vertices: [Vertex], capacity: Int) -> VertexBuffer<Vertex> {
@@ -121,6 +108,7 @@ class StrokeRenderer: Renderer {
 		let commandEncoder = context.commandEncoder
 		commandEncoder.setRenderPipelineState(self.renderPipelineState)
 
+		commandEncoder.setFrontFacing(.clockwise)
 		commandEncoder.setVertexBuffer(vertexBuffer.buffer, offset: 0, at: 0)
 		commandEncoder.setVertexBuffer(uniformsBuffer, offset: 0, at: 1)
 
@@ -128,6 +116,5 @@ class StrokeRenderer: Renderer {
 		commandEncoder.setFragmentSamplerState(self.colorSamplerState, at: 0)
 
 		commandEncoder.drawPrimitives(type: .point, vertexStart: 0, vertexCount: vertexBuffer.count)
-//		commandEncoder.drawPrimitives(.LineStrip, vertexStart: 0, vertexCount: vertexBuffer.count)
 	}
 }

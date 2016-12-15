@@ -1,9 +1,9 @@
 //
-//  RenderView.swift
-//  Metal2DScroll
+//	RenderView.swift
+//	Metal2DScroll
 //
-//  Created by Kaz Yoshikawa on 12/12/16.
-//  Copyright © 2016 Electricwoods LLC. All rights reserved.
+//	Created by Kaz Yoshikawa on 12/12/16.
+//	Copyright © 2016 Electricwoods LLC. All rights reserved.
 //
 
 import UIKit
@@ -45,7 +45,6 @@ class RenderView: UIView, MTKViewDelegate {
 		self.contentView.autoresizingMask = [.flexibleLeftMargin, .flexibleRightMargin, .flexibleTopMargin, .flexibleBottomMargin]
 		self.contentView.layer.borderColor = UIColor.brown.cgColor
 		self.contentView.layer.borderWidth = 1
-		print("self.contentView=\(self.contentView)")
 		self.setNeedsDisplay()
 	}
 
@@ -83,7 +82,6 @@ class RenderView: UIView, MTKViewDelegate {
 	private (set) lazy var contentView: RenderContentView = {
 		let renderableContentView = RenderContentView(frame: self.bounds)
 		renderableContentView.renderView = self
-		//renderableContentView.image = UIImage(named: "BlueMarble.png")
 		renderableContentView.backgroundColor = UIColor.clear
 		renderableContentView.translatesAutoresizingMaskIntoConstraints = false
 		renderableContentView.isUserInteractionEnabled = true
@@ -108,7 +106,8 @@ class RenderView: UIView, MTKViewDelegate {
 	// MARK: -
 
 	func draw(in view: MTKView) {
-		print("draw...begin")
+		self.drawView.setNeedsDisplay()
+
 		guard let drawable = self.mtkView.currentDrawable else { return }
 		guard let renderPassDescriptor = self.mtkView.currentRenderPassDescriptor else { return }
 		guard let renderableScene = self.renderableScene else { return }
@@ -123,15 +122,10 @@ class RenderView: UIView, MTKViewDelegate {
 		let commandEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor)
 	
 		let targetRect = contentView.convert(self.contentView.bounds, to: self.mtkView)
-//		let transform0 = CGAffineTransform.identity.translatedBy(x: 0, y: contentView.bounds.height).scaledBy(x: 1, y: -1)
-		let transform0 = CGAffineTransform.identity
 		let transform1 = renderableScene.bounds.transform(to: targetRect)
 		let transform2 = self.mtkView.bounds.transform(to: CGRect(x: -1.0, y: -1.0, width: 2.0, height: 2.0))
-//		let transform2 = self.mtkView.bounds.transform(to: CGRect(x: 1.0, y: 1.0, width: -2.0, height: -2.0))
 		let transform3 = CGAffineTransform.identity.translatedBy(x: 0, y: +1).scaledBy(x: 1, y: -1).translatedBy(x: 0, y: 1)
-//		let transform3 = CGAffineTransform.identity
-		let transform = GLKMatrix4(transform0 * transform1 * transform2 * transform3)
-//		let transform = GLKMatrix4Identity
+		let transform = GLKMatrix4(transform1 * transform2 * transform3)
 		let renderContext = RenderContext(commandEncoder: commandEncoder, transform: transform)
 		renderableScene.render(in: renderContext)
 
@@ -139,16 +133,11 @@ class RenderView: UIView, MTKViewDelegate {
 		
 		commandBuffer.present(drawable)
 		commandBuffer.commit()
-		print("draw...end")
 	}
 	
 	func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
 	}
 
-	// MARK: -
-
-	func drawOverlay(_ overlayView: OvalView) {
-	}
 }
 
 

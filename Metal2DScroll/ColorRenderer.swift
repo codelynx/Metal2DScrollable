@@ -1,8 +1,8 @@
 //
-//  SolidRenderer.swift
-//  TestMetal5
+//	SolidRenderer.swift
+//	Metal2DScroll
 //
-//  Created by Kaz Yoshikawa on 11/12/16.
+//	Created by Kaz Yoshikawa on 11/12/16.
 //
 //
 

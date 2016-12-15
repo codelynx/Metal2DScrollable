@@ -1,9 +1,9 @@
 //
-//  VertexBuffer.swift
-//  Metal2D
+//	VertexBuffer.swift
+//	Metal2DScroll
 //
-//  Created by Kaz Yoshikawa on 1/11/16.
-//
+//	Created by Kaz Yoshikawa on 1/11/16.
+//	Copyright © 2016 Electricwoods LLC. All rights reserved.
 //
 
 import Foundation
@@ -15,6 +15,7 @@ import GLKit
 //
 
 class VertexBuffer<T> {
+
 	let device: MTLDevice
 	var buffer: MTLBuffer
 	var count: Int
@@ -36,16 +37,20 @@ class VertexBuffer<T> {
 		*/
 	}
 
-	func append(_ verticies: [T]) {
-		if self.count + verticies.count < self.capacity {
+	func append(_ vertices: [T]) {
+		if self.count + vertices.count < self.capacity {
 			let vertexArray = UnsafeMutablePointer<T>(OpaquePointer(self.buffer.contents()))
-			for index in 0 ..< verticies.count {
-				vertexArray[self.count + index] = verticies[index]
+			for index in 0 ..< vertices.count {
+				vertexArray[self.count + index] = vertices[index]
 			}
-			self.count += verticies.count
+			self.count += vertices.count
 		}
-		else { fatalError("buffer overflow - to do: extend buffer")
-		}
+		else { fatalError("buffer overflow - to do: extend buffer") }
+	}
+
+	var vertices: [T] {
+		let vertexArray = UnsafeMutablePointer<T>(OpaquePointer(self.buffer.contents()))
+		return (0 ..< count).map { vertexArray[$0] }
 	}
 
 }

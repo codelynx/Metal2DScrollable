@@ -1,9 +1,9 @@
 //
-//  UIView+Z.swift
-//  Metal2DScroll
+//	UIView+Z.swift
+//	ZKit
 //
-//  Created by Kaz Yoshikawa on 12/12/16.
-//  Copyright © 2016 Electricwoods LLC. All rights reserved.
+//	Created by Kaz Yoshikawa on 12/12/16.
+//	Copyright © 2016 Electricwoods LLC. All rights reserved.
 //
 
 import UIKit
