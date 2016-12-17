@@ -29,9 +29,9 @@ class RenderView: UIView, MTKViewDelegate {
 	override func layoutSubviews() {
 		super.layoutSubviews()
 
-		self.sendSubview(toBack: self.scrollView)
-		self.bringSubview(toFront: self.mtkView)
+		self.sendSubview(toBack: self.mtkView)
 		self.bringSubview(toFront: self.drawView)
+		self.bringSubview(toFront: self.scrollView)
 
 		if let renderableScene = self.renderableScene {
 			let contentSize = renderableScene.contentSize
@@ -44,8 +44,6 @@ class RenderView: UIView, MTKViewDelegate {
 		}
 		self.contentView.autoresizingMask = [.flexibleLeftMargin, .flexibleRightMargin, .flexibleTopMargin, .flexibleBottomMargin]
 		self.setNeedsDisplay()
-
-		self.setup()
 	}
 
 	private (set) lazy var mtkView: MTKView = {
@@ -75,7 +73,6 @@ class RenderView: UIView, MTKViewDelegate {
 		let drawView = RenderDrawView(frame: self.bounds)
 		drawView.backgroundColor = UIColor.clear
 		drawView.renderView = self
-		drawView.isUserInteractionEnabled = false
 		self.addSubviewToFit(drawView)
 		return drawView
 	}()
@@ -103,15 +100,6 @@ class RenderView: UIView, MTKViewDelegate {
 		self.drawView.setNeedsDisplay()
 	}
 
-	lazy var setup: (()->()) = {
-		if let gestureRecognizers = self.scrollView.gestureRecognizers {
-			for gestureRecognizer in gestureRecognizers {
-				self.scrollView.removeGestureRecognizer(gestureRecognizer)
-				self.mtkView.addGestureRecognizer(gestureRecognizer)
-			}
-		}
-		return {}
-	}()
 
 	// MARK: -
 
