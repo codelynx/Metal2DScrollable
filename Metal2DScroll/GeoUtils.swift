@@ -11,49 +11,132 @@ import CoreGraphics
 import QuartzCore
 import GLKit
 
-struct Point {
+infix operator •
+infix operator ×
+
+
+protocol FloatCovertible {
+    var floatValue: Float { get }
+}
+
+extension CGFloat: FloatCovertible {
+	var floatValue: Float { return Float(self) }
+}
+
+extension Int: FloatCovertible {
+	var floatValue: Float { return Float(self) }
+}
+
+
+struct Point: Hashable {
+
 	var x: Float
 	var y: Float
-	init(_ x: Float, _ y: Float) {
-		self.x = x; self.y = y
+
+	static func - (lhs: Point, rhs: Point) -> Point {
+		return Point(x: lhs.x - rhs.x, y: lhs.y - rhs.y)
 	}
-	init(_ x: CGFloat, _ y: CGFloat) {
-		self.x = Float(x); self.y = Float(y)
+
+	static func + (lhs: Point, rhs: Point) -> Point {
+		return Point(x: lhs.x + rhs.x, y: lhs.y + rhs.y)
 	}
-	init(_ x: Int, _ y: Int) {
-		self.x = Float(x); self.y = Float(y)
+
+	static func * (lhs: Point, rhs: Float) -> Point {
+		return Point(x: lhs.x * rhs, y: lhs.y * rhs)
+	}
+
+	static func / (lhs: Point, rhs: Float) -> Point {
+		return Point(x: lhs.x / rhs, y: lhs.y / rhs)
+	}
+	
+	static func * (lhs: Point, rhs: Point) -> Float { // dot product
+		return lhs.x * rhs.x + lhs.y * rhs.y
+	}
+
+	static func × (lhs: Point, rhs: Point) -> Float { // cross product
+		return lhs.x * rhs.y - lhs.y * rhs.x
+	}
+	
+	var length²: Float {
+		return (x * x) + (y * y)
+	}
+
+	var length: Float {
+		return sqrt(self.length²)
+	}
+
+	var normalized: Point {
+		let length = self.length
+		return Point(x: x/length, y: y/length)
+	}
+
+	func angle(to: Point) -> Float {
+		return atan2(to.y - self.y, to.x - self.x)
+	}
+
+	func angle(from: Point) -> Float {
+		return atan2(self.y - from.y, self.x - from.x)
+	}
+
+	var hashValue: Int { return self.x.hashValue &- self.y.hashValue }
+
+	static func == (lhs: Point, rhs: Point) -> Bool {
+		return lhs.x == rhs.y && lhs.y == rhs.y
+	}
+	
+}
+
+extension Point {
+
+	init<X: FloatCovertible, Y: FloatCovertible>(_ x: X, _ y: Y) {
+		self.x = x.floatValue
+		self.y = y.floatValue
+	}
+	init<X: FloatCovertible, Y: FloatCovertible>(x: X, y: Y) {
+		self.x = x.floatValue
+		self.y = y.floatValue
 	}
 }
+
 
 struct Size {
 	var width: Float
 	var height: Float
-	init(_ width: Float, _ height: Float) {
-		self.width = width; self.height = height
+
+	init<W: FloatCovertible, H: FloatCovertible>(_ width: W, _ height: H) {
+		self.width = width.floatValue
+		self.height = height.floatValue
 	}
-	init(_ width: CGFloat, _ height: CGFloat) {
-		self.width = Float(width); self.height = Float(height)
-	}
-	init(_ width: Int, _ height: Int) {
-		self.width = Float(width); self.height = Float(height)
+
+	init<W: FloatCovertible, H: FloatCovertible>(width: W, height: H) {
+		self.width = width.floatValue
+		self.height = height.floatValue
 	}
 }
+
 
 struct Rect: CustomStringConvertible {
 	var origin: Point
 	var size: Size
+
+	init(origin: Point, size: Size) {
+		self.origin = origin; self.size = size
+	}
+
 	init(_ origin: Point, _ size: Size) {
 		self.origin = origin; self.size = size
 	}
-	init(_ x: Float, _ y: Float, _ width: Float, _ height: Float) {
-		self.origin = Point(x, y); self.size = Size(width, height)
+
+	init<X: FloatCovertible, Y: FloatCovertible, W: FloatCovertible, H: FloatCovertible>(_ x: X, _ y: Y, _ width: W, _ height: H) {
+		self.origin = Point(x: x, y: y)
+		self.size = Size(width: width, height: height)
 	}
-	init(_ x: CGFloat, _ y: CGFloat, _ width: CGFloat, _ height: CGFloat) {
-		self.origin = Point(x, y); self.size = Size(width, height)
+
+	init<X: FloatCovertible, Y: FloatCovertible, W: FloatCovertible, H: FloatCovertible>(x: X, y: Y, width: W, height: H) {
+		self.origin = Point(x: x, y: y)
+		self.size = Size(width: width, height: height)
 	}
-	init(_ x: Int, _ y: Int, _ width: Int, _ height: Int) {
-		self.origin = Point(x, y); self.size = Size(width, height)
-	}
+
 	var minX: Float { return min(origin.x, origin.x + size.width) }
 	var maxX: Float { return max(origin.x, origin.x + size.width) }
 	var midX: Float { return (origin.x + origin.x + size.width) / 2.0 }
@@ -61,21 +144,70 @@ struct Rect: CustomStringConvertible {
 	var maxY: Float { return max(origin.y, origin.y + size.height) }
 	var midY: Float { return (origin.y + origin.y + size.height) / 2.0 }
 
-	var CGRectValue: CGRect { return CGRect(x: CGFloat(origin.x), y: CGFloat(origin.y), width: CGFloat(size.width), height: CGFloat(size.height)) }
+	var cgRectValue: CGRect { return CGRect(x: CGFloat(origin.x), y: CGFloat(origin.y), width: CGFloat(size.width), height: CGFloat(size.height)) }
 	var description: String { return "{Rect: (\(origin.x),\(origin.y))-(\(size.width), \(size.height))}" }
 }
 
+// MARK: -
+
+// MARK: -
+
 extension CGPoint {
+
 	init(_ point: Point) {
 		self.init(x: CGFloat(point.x), y: CGFloat(point.y))
 	}
+
+	static func - (lhs: CGPoint, rhs: CGPoint) -> CGPoint {
+		return CGPoint(x: lhs.x - rhs.x, y: lhs.y - rhs.y)
+	}
+
+	static func + (lhs: CGPoint, rhs: CGPoint) -> CGPoint {
+		return CGPoint(x: lhs.x + rhs.x, y: lhs.y + rhs.y)
+	}
+
+	static func * (lhs: CGPoint, rhs: CGFloat) -> CGPoint {
+		return CGPoint(x: lhs.x * rhs, y: lhs.y * rhs)
+	}
+
+	static func / (lhs: CGPoint, rhs: CGFloat) -> CGPoint {
+		return CGPoint(x: lhs.x / rhs, y: lhs.y / rhs)
+	}
+	
+	static func * (lhs: CGPoint, rhs: CGPoint) -> CGFloat { // dot product
+		return lhs.x * rhs.x + lhs.y * rhs.y
+	}
+
+	static func ⨯ (lhs: CGPoint, rhs: CGPoint) -> CGFloat { // cross product
+		return lhs.x * rhs.y - lhs.y * rhs.x
+	}
+
+	static func × (lhs: CGPoint, rhs: CGPoint) -> CGFloat { // cross product
+		return lhs.x * rhs.y - lhs.y * rhs.x
+	}
+	
+	var length²: CGFloat {
+		return (x * x) + (y * y)
+	}
+
+	var length: CGFloat {
+		return sqrt(self.length²)
+	}
+
+	var normalized: CGPoint {
+		let length = self.length
+		return CGPoint(x: x/length, y: y/length)
+	}
+
 }
+
 
 extension CGSize {
 	init(_ size: Size) {
 		self.init(width: CGFloat(size.width), height: CGFloat(size.height))
 	}
 }
+
 
 extension CGRect {
 	init(_ rect: Rect) {
@@ -127,6 +259,7 @@ func CGSizeMakeAspectFit(_ imageSize: CGSize, frameSize: CGSize) -> CGSize {
 	return CGSize(width: width, height: height)
 }
 
+
 extension GLKMatrix4 {
 	init(_ transform: CGAffineTransform) {
 		let t = CATransform3DMakeAffineTransform(transform)
@@ -153,6 +286,7 @@ extension GLKMatrix4 {
 	}
 }
 
+
 extension GLKVector2 {
 	init(_ point: CGPoint) {
 		self.init(v: (Float(point.x), Float(point.y)))
@@ -162,11 +296,13 @@ extension GLKVector2 {
 	}
 }
 
+
 extension GLKVector4 {
 	var description: String {
 		return	"[ \(self.x), \(self.y), \(self.z), \(self.w) ]"
 	}
 }
+
 
 func * (l: GLKMatrix4, r: GLKMatrix4) -> GLKMatrix4 {
 	return GLKMatrix4Multiply(l, r)

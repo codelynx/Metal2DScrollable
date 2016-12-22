@@ -14,9 +14,3 @@ import GLKit
 protocol Renderer {
 	associatedtype VertexType
 }
-
-
-class AnyRenderer<T>: Renderer {
-	typealias VertexType = T
-}
-

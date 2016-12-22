@@ -35,6 +35,8 @@ extension MTLDevice {
 
 class ImageRenderable: Renderable {
 
+	typealias RendererType = ImageRenderer
+
 	let device: MTLDevice
 	var transform = GLKMatrix4Identity
 

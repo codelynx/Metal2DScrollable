@@ -97,7 +97,7 @@ class PointsRenderer: Renderer {
 	}()
 	
 	func vertexBuffer(for vertices: [Vertex], capacity: Int) -> VertexBuffer<Vertex> {
-		return VertexBuffer<Vertex>(device: self.device, vertices: vertices, capacity: capacity)
+		return VertexBuffer<Vertex>(device: self.device, vertices: vertices, expand: capacity)
 	}
 
 	func renderStroke(context: RenderContext, texture: MTLTexture, vertexBuffer: VertexBuffer<Vertex>) {

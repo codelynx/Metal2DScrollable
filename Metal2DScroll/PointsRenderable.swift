@@ -17,6 +17,8 @@ import GLKit
 
 class PointsRenderable: Renderable {
 
+	typealias RendererType = PointsRenderer
+
 	let device: MTLDevice
 	let renderer: PointsRenderer
 	var texture: MTLTexture

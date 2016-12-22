@@ -15,6 +15,8 @@ typealias ColorVertex = ColorRenderer.Vertex
 
 class ColorRectRenderable: Renderable {
 
+	typealias RendererType = ColorRenderer
+
 	let device: MTLDevice
 	let renderer: ColorRenderer
 	let vertexBuffer: VertexBuffer<ColorVertex>
@@ -25,11 +27,12 @@ class ColorRectRenderable: Renderable {
 		self.device = device
 		self.frame = frame
 		self.color = color
-		var r: CGFloat = 0
-		var g: CGFloat = 0
-		var b: CGFloat = 0
-		var a: CGFloat = 0
-		color.getRed(&r, green: &g, blue: &b, alpha: &a)
+//		var r: CGFloat = 0
+//		var g: CGFloat = 0
+//		var b: CGFloat = 0
+//		var a: CGFloat = 0
+//		color.getRed(&r, green: &g, blue: &b, alpha: &a)
+		var (r, g, b, a) = color.rgba
 		let renderer = ColorRenderer.colorRenderer(for: device)
 		let vertices = renderer.vertices(for: frame, color: color)
 		guard let vertexBuffer = renderer.vertexBuffer(for: vertices) else { return nil }
@@ -45,6 +48,8 @@ class ColorRectRenderable: Renderable {
 
 
 class ColorTriangleRenderable: Renderable {
+
+	typealias RendererType = ColorRenderer
 
 	let device: MTLDevice
 	let renderer: ColorRenderer

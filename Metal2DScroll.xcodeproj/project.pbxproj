@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CC04B2DD1E06D41C0047669E /* UIColor+Z.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC04B2DC1E06D41C0047669E /* UIColor+Z.swift */; };
+		CC04B2DF1E06ECC10047669E /* StrokeShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC04B2DE1E06ECC10047669E /* StrokeShape.swift */; };
 		CC05064A1DFE99FD00A9E7A2 /* Renderable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0506491DFE99FD00A9E7A2 /* Renderable.swift */; };
 		CC05064C1DFE9A4F00A9E7A2 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC05064B1DFE9A4F00A9E7A2 /* Renderer.swift */; };
 		CC05064E1DFE9C2800A9E7A2 /* RenderableScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC05064D1DFE9C2800A9E7A2 /* RenderableScene.swift */; };
@@ -35,12 +37,20 @@
 		CC77EE121DFDEC0F001E8F77 /* ImageRenderable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC77EE111DFDEC0F001E8F77 /* ImageRenderable.swift */; };
 		CC77EE141DFDF109001E8F77 /* RenderContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC77EE131DFDF109001E8F77 /* RenderContext.swift */; };
 		CC77EE161DFDF2CB001E8F77 /* BlueMarble.png in Resources */ = {isa = PBXBuildFile; fileRef = CC77EE151DFDF2CB001E8F77 /* BlueMarble.png */; };
+		CC9992C41E068D88001D92F1 /* StrokeRenderable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC9992C11E068D88001D92F1 /* StrokeRenderable.swift */; };
+		CC9992C51E068D88001D92F1 /* StrokeRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC9992C21E068D88001D92F1 /* StrokeRenderer.swift */; };
+		CC9992C61E068D88001D92F1 /* StrokeShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = CC9992C31E068D88001D92F1 /* StrokeShaders.metal */; };
+		CC9992CA1E06B48E001D92F1 /* Sequence+Z.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC9992C91E06B48E001D92F1 /* Sequence+Z.swift */; };
+		CCC8C8531E0BA25A00103DC9 /* OrderedSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCC8C8511E0BA25A00103DC9 /* OrderedSet.swift */; };
+		CCC8C8541E0BA25A00103DC9 /* OrderedSet.webloc in Resources */ = {isa = PBXBuildFile; fileRef = CCC8C8521E0BA25A00103DC9 /* OrderedSet.webloc */; };
 		CCE49B0A1E0018AB0016111C /* ColorRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCE49B081E0018AB0016111C /* ColorRenderer.swift */; };
 		CCE49B0B1E0018AB0016111C /* ColorShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = CCE49B091E0018AB0016111C /* ColorShaders.metal */; };
 		CCE49B0D1E001BD90016111C /* ColorRenderable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCE49B0C1E001BD90016111C /* ColorRenderable.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		CC04B2DC1E06D41C0047669E /* UIColor+Z.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Z.swift"; sourceTree = "<group>"; };
+		CC04B2DE1E06ECC10047669E /* StrokeShape.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StrokeShape.swift; sourceTree = "<group>"; };
 		CC0506491DFE99FD00A9E7A2 /* Renderable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = Renderable.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		CC05064B1DFE9A4F00A9E7A2 /* Renderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = Renderer.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		CC05064D1DFE9C2800A9E7A2 /* RenderableScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = RenderableScene.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -72,6 +82,12 @@
 		CC77EE111DFDEC0F001E8F77 /* ImageRenderable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ImageRenderable.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		CC77EE131DFDF109001E8F77 /* RenderContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = RenderContext.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		CC77EE151DFDF2CB001E8F77 /* BlueMarble.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BlueMarble.png; sourceTree = "<group>"; };
+		CC9992C11E068D88001D92F1 /* StrokeRenderable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StrokeRenderable.swift; sourceTree = "<group>"; };
+		CC9992C21E068D88001D92F1 /* StrokeRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StrokeRenderer.swift; sourceTree = "<group>"; };
+		CC9992C31E068D88001D92F1 /* StrokeShaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = StrokeShaders.metal; sourceTree = "<group>"; };
+		CC9992C91E06B48E001D92F1 /* Sequence+Z.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Sequence+Z.swift"; sourceTree = "<group>"; };
+		CCC8C8511E0BA25A00103DC9 /* OrderedSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderedSet.swift; sourceTree = "<group>"; };
+		CCC8C8521E0BA25A00103DC9 /* OrderedSet.webloc */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = OrderedSet.webloc; sourceTree = "<group>"; };
 		CCE49B081E0018AB0016111C /* ColorRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ColorRenderer.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		CCE49B091E0018AB0016111C /* ColorShaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; lineEnding = 0; path = ColorShaders.metal; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.metal; };
 		CCE49B0C1E001BD90016111C /* ColorRenderable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ColorRenderable.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -95,6 +111,7 @@
 			isa = PBXGroup;
 			children = (
 				CC77EE051DFD7FD7001E8F77 /* README.md */,
+				CCC8C8501E0BA25A00103DC9 /* Externals */,
 				CC0CFC8D1DFC306B0090F17B /* Metal2DScroll */,
 				CC0CFC861DFC306B0090F17B /* Frameworks */,
 				CC0CFC851DFC306B0090F17B /* Products */,
@@ -149,10 +166,25 @@
 				CC0506511DFEB04A00A9E7A2 /* RenderDrawView.swift */,
 				CC05064B1DFE9A4F00A9E7A2 /* Renderer.swift */,
 				CC05064F1DFE9D0200A9E7A2 /* RenderView.swift */,
+				CC9992C91E06B48E001D92F1 /* Sequence+Z.swift */,
+				CC9992C11E068D88001D92F1 /* StrokeRenderable.swift */,
+				CC9992C21E068D88001D92F1 /* StrokeRenderer.swift */,
+				CC9992C31E068D88001D92F1 /* StrokeShaders.metal */,
+				CC04B2DE1E06ECC10047669E /* StrokeShape.swift */,
+				CC04B2DC1E06D41C0047669E /* UIColor+Z.swift */,
 				CC05065B1DFEDFCF00A9E7A2 /* UIView+Z.swift */,
 				CC77EE0F1DFDEAAD001E8F77 /* VertexBuffer.swift */,
 			);
 			path = Metal2DScroll;
+			sourceTree = "<group>";
+		};
+		CCC8C8501E0BA25A00103DC9 /* Externals */ = {
+			isa = PBXGroup;
+			children = (
+				CCC8C8511E0BA25A00103DC9 /* OrderedSet.swift */,
+				CCC8C8521E0BA25A00103DC9 /* OrderedSet.webloc */,
+			);
+			path = Externals;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -217,6 +249,7 @@
 			files = (
 				CC77EE161DFDF2CB001E8F77 /* BlueMarble.png in Resources */,
 				CC0CFC9B1DFC306B0090F17B /* LaunchScreen.storyboard in Resources */,
+				CCC8C8541E0BA25A00103DC9 /* OrderedSet.webloc in Resources */,
 				CC0CFC981DFC306B0090F17B /* Assets.xcassets in Resources */,
 				CC0CFC961DFC306B0090F17B /* Main.storyboard in Resources */,
 				CC7473C21E00E42A00E55064 /* PointsParticle.png in Resources */,
@@ -230,24 +263,31 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CC04B2DD1E06D41C0047669E /* UIColor+Z.swift in Sources */,
 				CC0506541DFEB0B000A9E7A2 /* RenderContentView.swift in Sources */,
 				CC0506561DFEBBDA00A9E7A2 /* CanvasScene.swift in Sources */,
 				CC77EE0C1DFDE9AF001E8F77 /* ImageShaders.metal in Sources */,
 				CC05065C1DFEDFCF00A9E7A2 /* UIView+Z.swift in Sources */,
 				CC0506581DFEBD2A00A9E7A2 /* CanvasViewController.swift in Sources */,
 				CC05064C1DFE9A4F00A9E7A2 /* Renderer.swift in Sources */,
+				CC04B2DF1E06ECC10047669E /* StrokeShape.swift in Sources */,
 				CCE49B0B1E0018AB0016111C /* ColorShaders.metal in Sources */,
 				CC0CFC8F1DFC306B0090F17B /* AppDelegate.swift in Sources */,
+				CC9992C61E068D88001D92F1 /* StrokeShaders.metal in Sources */,
 				CC05064E1DFE9C2800A9E7A2 /* RenderableScene.swift in Sources */,
 				CC05064A1DFE99FD00A9E7A2 /* Renderable.swift in Sources */,
 				CC77EE101DFDEAAD001E8F77 /* VertexBuffer.swift in Sources */,
 				CCE49B0A1E0018AB0016111C /* ColorRenderer.swift in Sources */,
 				CC7473BE1E00D59500E55064 /* PointsRenderer.swift in Sources */,
+				CC9992C41E068D88001D92F1 /* StrokeRenderable.swift in Sources */,
 				CC77EE121DFDEC0F001E8F77 /* ImageRenderable.swift in Sources */,
 				CC77EE141DFDF109001E8F77 /* RenderContext.swift in Sources */,
 				CC7473BC1E00D58100E55064 /* PointsShaders.metal in Sources */,
 				CC77EE0E1DFDEA39001E8F77 /* GeoUtils.swift in Sources */,
 				CC05065A1DFEDE3F00A9E7A2 /* CoreGraphics+Z.swift in Sources */,
+				CC9992C51E068D88001D92F1 /* StrokeRenderer.swift in Sources */,
+				CC9992CA1E06B48E001D92F1 /* Sequence+Z.swift in Sources */,
+				CCC8C8531E0BA25A00103DC9 /* OrderedSet.swift in Sources */,
 				CC0506501DFE9D0200A9E7A2 /* RenderView.swift in Sources */,
 				CCE49B0D1E001BD90016111C /* ColorRenderable.swift in Sources */,
 				CC77EE0A1DFDE991001E8F77 /* ImageRenderer.swift in Sources */,

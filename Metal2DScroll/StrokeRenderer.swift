@@ -1,30 +1,36 @@
 //
-//	SolidRenderer.swift
+//	StrokeRenderer.swift
 //	Metal2DScroll
 //
-//	Created by Kaz Yoshikawa on 11/12/16.
+//	Created by Kaz Yoshikawa on 1/11/16.
 //
 //
 
 import Foundation
-import MetalKit
+import CoreGraphics
+import QuartzCore
 import GLKit
 
+typealias StrokeVertex = StrokeRenderer.Vertex
 
-class ColorRenderer: Renderer {
+//
+//	StrokeRenderer
+//
+
+class StrokeRenderer: Renderer {
 
 	typealias VertexType = Vertex
 
 	// TODO: needs refactoring
 
-	private static var deviceRendererTable = NSMapTable<MTLDevice, ColorRenderer>.weakToStrongObjects() // TODO: consider weak-to-weak?
+	private static var deviceRendererTable = NSMapTable<MTLDevice, StrokeRenderer>.weakToStrongObjects() // TODO: consider weak-to-weak?
 
-	class func colorRenderer(for device: MTLDevice) -> ColorRenderer {
-		if let renderer = ColorRenderer.deviceRendererTable.object(forKey: device) {
+	class func strokeRenderer(for device: MTLDevice) -> StrokeRenderer {
+		if let renderer = StrokeRenderer.deviceRendererTable.object(forKey: device) {
 			return renderer
 		}
-		let renderer = ColorRenderer(device: device)
-		ColorRenderer.deviceRendererTable.setObject(renderer, forKey: device)
+		let renderer = StrokeRenderer(device: device)
+		StrokeRenderer.deviceRendererTable.setObject(renderer, forKey: device)
 		return renderer
 	}
 
@@ -45,6 +51,8 @@ class ColorRenderer: Renderer {
 
 	struct Vertex {
 		var x, y, z, w, r, g, b, a: Float
+		var point: Point { return Point(x: x, y: y) }
+		var cgPoint: CGPoint { return CGPoint(x: CGFloat(x), y: CGFloat(y)) }
 	}
 
 	struct Uniforms {
@@ -54,7 +62,7 @@ class ColorRenderer: Renderer {
 	var vertexDescriptor: MTLVertexDescriptor {
 		let vertexDescriptor = MTLVertexDescriptor()
 		vertexDescriptor.attributes[0].offset = 0
-		vertexDescriptor.attributes[0].format = .float2
+		vertexDescriptor.attributes[0].format = .float4
 		vertexDescriptor.attributes[0].bufferIndex = 0
 
 		vertexDescriptor.attributes[1].offset = MemoryLayout<Float>.size * 4
@@ -73,8 +81,8 @@ class ColorRenderer: Renderer {
 	lazy var renderPipelineState: MTLRenderPipelineState = {
 		let renderPipelineDescriptor = MTLRenderPipelineDescriptor()
 		renderPipelineDescriptor.vertexDescriptor = self.vertexDescriptor
-		renderPipelineDescriptor.vertexFunction = self.library.makeFunction(name: "color_vertex")!
-		renderPipelineDescriptor.fragmentFunction = self.library.makeFunction(name: "color_fragment")!
+		renderPipelineDescriptor.vertexFunction = self.library.makeFunction(name: "stroke_vertex")!
+		renderPipelineDescriptor.fragmentFunction = self.library.makeFunction(name: "stroke_fragment")!
 
 		renderPipelineDescriptor.colorAttachments[0].pixelFormat = self.pixelFormat
 		renderPipelineDescriptor.colorAttachments[0].isBlendingEnabled = true
@@ -99,12 +107,28 @@ class ColorRenderer: Renderer {
 		return self.device.makeSamplerState(descriptor: samplerDescriptor)
 	}()
 
+	func render(context: RenderContext, vertexBuffer: VertexBuffer<Vertex>, indexBuffer: VertexBuffer<UInt16>) {
+		var uniforms = Uniforms(transform: context.transform)
+		let uniformsBuffer = device.makeBuffer(bytes: &uniforms, length: MemoryLayout<Uniforms>.size, options: MTLResourceOptions())
+
+		let commandEncoder = context.commandEncoder
+		commandEncoder.setRenderPipelineState(self.renderPipelineState)
+		commandEncoder.setFrontFacing(.counterClockwise)
+//		commandEncoder.setFrontFacing(.clockwise)
+		commandEncoder.setVertexBuffer(vertexBuffer.buffer, offset: 0, at: 0)
+		commandEncoder.setVertexBuffer(uniformsBuffer, offset: 0, at: 1)
+		
+		commandEncoder.drawIndexedPrimitives(type: .triangle, indexCount: indexBuffer.count, indexType: .uint16, indexBuffer: indexBuffer.buffer, indexBufferOffset: 0)
+	}
+
 	func render(context: RenderContext, vertexBuffer: VertexBuffer<Vertex>) {
 		var uniforms = Uniforms(transform: context.transform)
 		let uniformsBuffer = device.makeBuffer(bytes: &uniforms, length: MemoryLayout<Uniforms>.size, options: MTLResourceOptions())
 
 		let commandEncoder = context.commandEncoder
 		commandEncoder.setRenderPipelineState(self.renderPipelineState)
+		commandEncoder.setFrontFacing(.counterClockwise)
+//		commandEncoder.setFrontFacing(.clockwise)
 		commandEncoder.setVertexBuffer(vertexBuffer.buffer, offset: 0, at: 0)
 		commandEncoder.setVertexBuffer(uniformsBuffer, offset: 0, at: 1)
 		
@@ -119,6 +143,7 @@ class ColorRenderer: Renderer {
 		let l = rect.minX, r = rect.maxX, t = rect.minY, b = rect.maxY
 		let rgba = color.rgba
 		let (_r, _g, _b, _a) = (Float(rgba.r), Float(rgba.g), Float(rgba.b), Float(rgba.a))
+
 		return [
 			Vertex(x: l, y: t, z: 0, w: 1, r: _r, g: _g, b: _b, a: _a),
 			Vertex(x: l, y: b, z: 0, w: 1, r: _r, g: _g, b: _b, a: _a),
@@ -129,4 +154,5 @@ class ColorRenderer: Renderer {
 		]
 	}
 }
+
 

@@ -19,15 +19,14 @@ class VertexBuffer<T> {
 	let device: MTLDevice
 	var buffer: MTLBuffer
 	var count: Int
-	var capacity: Int
+	var expand: Int
 
-	init(device: MTLDevice, vertices: [T], capacity: Int? = nil) {
+	init(device: MTLDevice, vertices: [T], expand: Int? = nil) {
 		self.device = device
 		self.count = vertices.count
-		self.capacity = capacity ?? vertices.count
-		let length = MemoryLayout<T>.size * self.capacity
+		self.expand = (expand ?? 4096)
+		let length = MemoryLayout<T>.size * (vertices.count + self.expand)
 		self.buffer = device.makeBuffer(bytes: vertices, length: length, options: MTLResourceOptions())
-		assert(self.count <= self.capacity)
 		/*
 		let vertexArray = UnsafeMutablePointer<T>(self.buffer.contents())
 		for index in 0 ..< verticies.count {
@@ -38,7 +37,7 @@ class VertexBuffer<T> {
 	}
 
 	func append(_ vertices: [T]) {
-		if self.count + vertices.count < self.capacity {
+		if self.count + vertices.count < self.expand {
 			let vertexArray = UnsafeMutablePointer<T>(OpaquePointer(self.buffer.contents()))
 			for index in 0 ..< vertices.count {
 				vertexArray[self.count + index] = vertices[index]
