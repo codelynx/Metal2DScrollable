@@ -38,6 +38,7 @@
 
 extension Sequence {
 
+	@discardableResult
 	func pair<T>(_ closure: (Self.Iterator.Element, Self.Iterator.Element) -> T ) -> [T] {
 		var results = [T]()
 		var previous: Self.Iterator.Element? = nil

@@ -40,7 +40,6 @@ class ColorRenderer: Renderer {
 	}
 	
 	deinit {
-		print("\(#function)")
 	}
 
 	struct Vertex {

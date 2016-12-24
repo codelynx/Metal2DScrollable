@@ -26,6 +26,7 @@ func angle(_ a: CPoint, _ b: CPoint) -> CGFloat {
 }
 
 class CPoint: Hashable {
+
 	var point: CGPoint
 	
 	var x: CGFloat { return point.x }
@@ -44,9 +45,12 @@ class CPoint: Hashable {
 	static func == (lhs: CPoint, rhs: CPoint) -> Bool { // same value points should be different
 		return lhs === rhs
 	}
+
+	static let zero = CPoint(x: 0, y: 0)
 }
 
 extension CPoint {
+
 
 	static func - (lhs: CPoint, rhs: CPoint) -> CPoint {
 		return CPoint(x: lhs.x - rhs.x, y: lhs.y - rhs.y)
@@ -285,36 +289,60 @@ class LineJoint {
 
 class LineShape {
 
-	var lineSegments = [LineSegment]()
-	var triangles = [(CPoint, CPoint, CPoint)]()
-	var pointsArray = [CPoint]()
-	var vertexArray = [StrokeVertex]()
-	var indexArray = [UInt16]()
+	var lastTouchPoint: TouchPoint?
+	var lastLineSegment: LineSegment?
+	var points = [CPoint]()
+	var vertexes = [StrokeVertex]()
+	var indexes = [UInt16]()
+	var endCap = [StrokeVertex]()
+	var tentativeTriangles = [(StrokeVertex, StrokeVertex, StrokeVertex)]()
 
-	init(points: [TouchPoint]) {
-		let lineSegments = points.pair { (p1, p2) in LineSegment(from: p1, to: p2) }
+
+	var leftAnchor = CPoint(x: 0, y: 0)
+	var rightAnchor = CPoint(x: 0, y: 0)
+
+	init(_ points: [TouchPoint]) {
+		self.append(points)
+	}
+	
+	func append(_ touchPoints: [TouchPoint]) {
+		guard touchPoints.count > 0 else { return }
+
+		let touchPoints: [TouchPoint] = [self.lastTouchPoint].flatMap { $0 } + touchPoints
+		var lineSegments: [LineSegment] = [self.lastLineSegment].flatMap { $0 }
+		lineSegments += touchPoints.pair { (p1, p2) in LineSegment(from: p1, to: p2) }
 
 		var triangles = [(CPoint, CPoint, CPoint)]()
+		if let first = lineSegments.first {
 
-		var leftPoints = [CPoint]()
-		var rightPoints = [CPoint]()
-		guard let first = lineSegments.first else { return }
-		let cap1a = first.lineCap(.from)
+			if self.lastLineSegment == nil {
+				let cap1a = first.lineCap(.from)
 
-		leftPoints += [ cap1a.c, cap1a.d, cap1a.e ]
-		rightPoints += [ cap1a.c, cap1a.b, cap1a.a ]
+				triangles += [(first.from as CPoint, cap1a.c, cap1a.d)]
+				triangles += [(first.from as CPoint, cap1a.d, cap1a.e)]
 
-		var currentLeft = cap1a.e
-		var currentRight = cap1a.a
+				triangles += [(first.from as CPoint, cap1a.b, cap1a.c)]
+				triangles += [(first.from as CPoint, cap1a.a, cap1a.b)]
 
-		triangles += [(first.from, cap1a.c, cap1a.d) as (CPoint, CPoint, CPoint)]
-		triangles += [(first.from, cap1a.d, cap1a.e) as (CPoint, CPoint, CPoint)]
+				leftAnchor = cap1a.e
+				rightAnchor = cap1a.a
+			}
+		}
+		else {
+			guard let point = touchPoints.first else { return }
+			var tentativeTriangles = [(StrokeVertex, StrokeVertex, StrokeVertex)]()
+			let radius = point.width * 0.5
+			let (l, t, r, b) = (point.x - radius, point.y - radius, point.x + radius, point.y + radius)
+			let (lt, rt, lb, rb) = (CPoint(x: l, y: t), CPoint(x: r, y: t), CPoint(x: l, y: b), CPoint(x: r, y: b))
+			tentativeTriangles.append((StrokeVertex(lb), StrokeVertex(lt), StrokeVertex(rt)))
+			tentativeTriangles.append((StrokeVertex(lb), StrokeVertex(rt), StrokeVertex(rb)))
+			self.tentativeTriangles = tentativeTriangles
+		}
 
-		triangles += [(first.from, cap1a.b, cap1a.c) as (CPoint, CPoint, CPoint)]
-		triangles += [(first.from, cap1a.a, cap1a.b) as (CPoint, CPoint, CPoint)]
-
+		self.lastTouchPoint = touchPoints.last
+		self.lastLineSegment = lineSegments.last
 		
-		_ = lineSegments.pair { (line1, line2) in
+		lineSegments.pair { (line1, line2) in
 			let cap1a = line1.lineCap(.from)
 			let cap1b = line1.lineCap(.to)
 			let cap2a = line2.lineCap(.from)
@@ -324,77 +352,107 @@ class LineShape {
 			let rightLines = (Line(from: cap1a.b, to: cap1b.d), Line(from: cap2a.b, to: cap2b.d))
 
 			if let p = Line.intersection(leftLines.0, leftLines.1, true) {
-				leftPoints.append(p)
-				triangles += [(line1.from, line1.to, p) as (CPoint, CPoint, CPoint)]
-				triangles += [(line1.from, currentLeft, p) as (CPoint, CPoint, CPoint)]
-				currentLeft = p
+				triangles.append((line1.from, line1.to, p) as (CPoint, CPoint, CPoint))
+				triangles.append((line1.from, leftAnchor, p) as (CPoint, CPoint, CPoint))
+				leftAnchor = p
 			}
 			else {
-				triangles += [(cap1b.b, cap2a.d, line2.from) as (CPoint, CPoint, CPoint)]
-				triangles += [(cap1b.b, line1.from, currentLeft) as (CPoint, CPoint, CPoint)]
-				triangles += [(cap1b.b, line1.to, line1.from) as (CPoint, CPoint, CPoint)]
-
-				leftPoints.append(cap1b.b)
-				leftPoints.append(cap2a.d)
-				currentLeft = cap2a.d
+				triangles.append((cap1b.b, cap2a.d, line2.from as CPoint))
+				triangles.append((cap1b.b, line1.from as CPoint, leftAnchor))
+				triangles.append((cap1b.b, line1.to as CPoint, line1.from as CPoint))
+				leftAnchor = cap2a.d
 			}
 
 			if let q = Line.intersection(rightLines.0, rightLines.1, true) {
-				rightPoints.append(q)
-				triangles += [(currentRight, line1.from, line1.to) as (CPoint, CPoint, CPoint)]
-				triangles += [(line1.to, currentRight, q) as (CPoint, CPoint, CPoint)]
-				currentRight = q
+				triangles.append((rightAnchor, line1.from as CPoint, line1.to as CPoint))
+				triangles.append((line1.to as CPoint, rightAnchor, q))
+				rightAnchor = q
 			}
 			else {
-				triangles += [(line1.from, line1.to, currentRight) as (CPoint, CPoint, CPoint)]
-				triangles += [(line1.to, cap1b.d, currentRight) as (CPoint, CPoint, CPoint)]
+				triangles.append((line1.from as CPoint, line1.to as CPoint, rightAnchor))
+				triangles.append((line1.to as CPoint, cap1b.d, rightAnchor))
+				triangles.append((line2.from as CPoint, cap1b.d, cap2a.b))
 
-
-				rightPoints.append(cap1b.d)
-				rightPoints.append(cap2a.b)
-				currentRight = cap2a.b
-				triangles += [(line2.from, cap1b.d, cap2a.b) as (CPoint, CPoint, CPoint)]
+				rightAnchor = cap2a.b
 			}
 		}
 
+		// append to vertex and index buffer
+		self.append(triangles: triangles)
+
+		// end of the line, but following points may be arrived soon, for now, make it tentative.
 		if let last = lineSegments.last {
-			let cap2a = last.lineCap(.from)
-			let cap2b = last.lineCap(.to)
+			var tentativeTriangles = [(StrokeVertex, StrokeVertex, StrokeVertex)]()
+			let cap = last.lineCap(.to)
+			tentativeTriangles.append((StrokeVertex(last.from), StrokeVertex(self.leftAnchor), StrokeVertex(cap.a)))
+			tentativeTriangles.append((StrokeVertex(last.from), StrokeVertex(cap.a), StrokeVertex(last.to)))
 
-			triangles += [(last.from, last.to, currentLeft) as (CPoint, CPoint, CPoint)]
-			triangles += [(cap2b.a, last.to, currentLeft) as (CPoint, CPoint, CPoint)]
-
-			triangles += [(currentRight, last.from, last.to) as (CPoint, CPoint, CPoint)]
-			triangles += [(currentRight, last.to, cap2b.e) as (CPoint, CPoint, CPoint)]
-
-			leftPoints.append(cap2b.b)
-			leftPoints.append(cap2b.c)
-
-			rightPoints.append(cap2b.d)
-			rightPoints.append(cap2b.c)
-
-			triangles += [(last.to, cap2b.c, cap2b.d) as (CPoint, CPoint, CPoint)]
-			triangles += [(last.to, cap2b.d, cap2b.e) as (CPoint, CPoint, CPoint)]
-
-			triangles += [(last.to, cap2b.b, cap2b.c) as (CPoint, CPoint, CPoint)]
-			triangles += [(last.to, cap2b.a, cap2b.b) as (CPoint, CPoint, CPoint)]
+			tentativeTriangles.append((StrokeVertex(last.from), StrokeVertex(last.to), StrokeVertex(cap.e)))
+			tentativeTriangles.append((StrokeVertex(last.from), StrokeVertex(cap.e), StrokeVertex(self.rightAnchor)))
+			self.tentativeTriangles = tentativeTriangles
 		}
-		
 
-		self.lineSegments = lineSegments
-//		self.points = leftPoints + rightPoints.reversed()
-		self.triangles = triangles
-		let allPoints: [CPoint] = self.triangles.flatMap { [$0.0, $0.1, $0.2] }
-		let pointOrderedSet = OrderedSet<CPoint>(sequence: allPoints)
-		let pointsArray = pointOrderedSet.map { $0 }
-		let vertexArray = pointOrderedSet.map {
-			StrokeVertex(x: Float($0.x), y: Float($0.y), z: 0, w: 1, r: 1, g: 0, b: 0, a: 1)
+	}
+
+	private func append(triangles: [(CPoint, CPoint, CPoint)]) {
+		guard triangles.count > 0 else { return }
+		var points = self.points
+		var appendingIndexes = [UInt16]()
+		var appendingVertexes = [StrokeVertex]()
+		let tentativePoints = triangles.flatMap { [$0.0, $0.1, $0.2] }
+		for tentativePoint in tentativePoints {
+			if let index = points.index(of: tentativePoint) {
+				appendingIndexes.append(UInt16(index))
+			}
+			else {
+				let index = points.count
+				points.append(tentativePoint)
+				let (x, y) = (Float(tentativePoint.x), Float(tentativePoint.y))
+				appendingVertexes.append(StrokeVertex(x: x, y: y, z: 0, w: 1, r: 1, g: 0, b: 0, a: 1))
+				appendingIndexes.append(UInt16(index))
+			}
 		}
-		let indexArray: [UInt16] = triangles.flatMap { [$0.0, $0.1, $0.2] }.map { UInt16(pointsArray.index(of: $0)!) }
 
-		self.pointsArray = pointsArray
-		self.vertexArray = vertexArray
-		self.indexArray = indexArray
+		self.points = points
+		self.vertexes += appendingVertexes
+		self.indexes += appendingIndexes
+	}
+
+	func close() {
+
+		if let last = self.lastLineSegment {
+			let cap = last.lineCap(.to)
+
+			var triangles = [(CPoint, CPoint, CPoint)]()
+			triangles.append((last.from as CPoint, self.leftAnchor, cap.a))
+			triangles.append((last.from as CPoint, cap.a, last.to as CPoint))
+			triangles.append((last.from as CPoint, last.to as CPoint, cap.e as CPoint))
+			triangles.append((last.from as CPoint, cap.e, self.rightAnchor))
+//			triangles += [(cap.e, cap.a, cap.b)]
+//			triangles += [(cap.e, cap.b, cap.d)]
+
+			self.append(triangles: triangles)
+		}
+
+		self.tentativeTriangles = []
+	}
+
+
+}
+
+
+extension StrokeVertex {
+
+	init(_ touchPoint: TouchPoint) {
+		(self.x, self.y) = (Float(touchPoint.x), Float(touchPoint.y))
+		(self.z, self.w) = (0, 1)
+		(self.r, self.g, self.b, self.a) = (1, 0, 0, 1)
+	}
+
+	init(_ point: CPoint) {
+		(self.x, self.y) = (Float(point.x), Float(point.y))
+		(self.z, self.w) = (0, 1)
+		(self.r, self.g, self.b, self.a) = (1, 0, 0, 1)
 	}
 
 }

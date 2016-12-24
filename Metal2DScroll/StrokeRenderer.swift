@@ -46,7 +46,6 @@ class StrokeRenderer: Renderer {
 	}
 	
 	deinit {
-		print("\(#function)")
 	}
 
 	struct Vertex {

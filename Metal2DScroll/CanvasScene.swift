@@ -64,18 +64,11 @@ class CanvasScene: RenderableScene {
 			(333.0, 642.5), (308.5, 644.0), (286.5, 644.5), (263.5, 644.5), (241.5, 642.5), (221.5, 637.0), (204.5, 631.5), (191.5, 625.5), (181.5, 621.0),
 			(174.5, 614.5)
 		]
-		let vertices = points.map { TouchPoint(x: $0.0, y: $0.1, w: 16.0) }
-		return StrokeRenderable(device: self.device, texture: self.brushTexture, points: vertices)
+		let touchPoints = points.map { TouchPoint(x: $0.0, y: $0.1, w: 16.0) }
+		let stroke = StrokeRenderable(device: self.device, texture: self.brushTexture, points: touchPoints)
+		stroke.close()
+		return stroke
 	}()
-
-	lazy var sampleStroke2: StrokeTriangleRenderable = {
-		let p1 = StrokeVertex(x: 200, y: 100, z: 0, w: 1, r: 1, g: 0, b: 0, a: 1)
-		let p2 = StrokeVertex(x: 100, y: 300, z: 0, w: 1, r: 1, g: 0, b: 0, a: 1)
-		let p3 = StrokeVertex(x: 400, y: 200, z: 0, w: 1, r: 1, g: 0, b: 0, a: 1)
-		return StrokeTriangleRenderable(device: self.device, point1: p1, point2: p2, point3: p3)!
-	}()
-	
-
 
 	private lazy var textAttributes: [String: AnyObject] = {
 		var paragraphStyle = NSParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
@@ -96,9 +89,7 @@ class CanvasScene: RenderableScene {
 	override func didMove(to view: RenderView) {
 		super.didMove(to: view)
 
-//		self.pointsStrokes = [self.sampleStroke]
-		
-
+		self.strokes.append(self.sampleStroke1)
 	}
 
 	override func draw(in context: CGContext) {
@@ -106,21 +97,8 @@ class CanvasScene: RenderableScene {
 		formatter.dateFormat = "HH:mm:ss"
 		(formatter.string(from: Date()) as NSString).draw(at: CGPoint(x: 758, y: 320), withAttributes: self.textAttributes)
 
-
-
-		let shape = self.sampleStroke1.shape
-		for index in stride(from: 0, to: shape.indexArray.count, by: 3) {
-			let index3 = [index + 0, index + 1, index + 2].map { shape.indexArray[$0] }
-			let vertex3 = index3.map { shape.vertexArray[Int($0)] }
-			UIColor.yellow.withAlphaComponent(0.25).set()
-			let b = UIBezierPath()
-			b.move(to: vertex3[0].cgPoint)
-			b.addLine(to: vertex3[1].cgPoint)
-			b.addLine(to: vertex3[2].cgPoint)
-			b.close()
-			b.fill()
-		}
-
+		// debugging purpose
+		self.strokes.last?.draw()
 	}
 
 	override func render(in context: RenderContext) {
@@ -132,48 +110,51 @@ class CanvasScene: RenderableScene {
 		for (_, stroke) in touchStrokesMap {
 			stroke.render(context: context)
 		}
-		
-		self.sampleStroke1.render(context: context)
-//		self.sampleStroke2.render(context: context)
 	}
 
 	func touchPoint(touch: UITouch, in view: UIView) -> TouchPoint {
 		let point = touch.location(in: view)
-		return TouchPoint(x: point.x, y: point.y, w: 8.0)
+		return TouchPoint(x: point.x, y: point.y, w: 16.0)
 	}
 
 	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?, contentView: UIView) {
-		//print("touchesBegan")
 		for touch in touches {
 			let touchPoint = self.touchPoint(touch: touch, in: contentView)
 			let stroke = StrokeRenderable(device: self.device, texture: self.brushTexture, points: [touchPoint])
 			touchStrokesMap[touch] = stroke
-			//print("\(point)")
 		}
 	}
 	
 	override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?, contentView: UIView) {
-		print("touchesMoved")
 		guard let event = event else { return }
 		for touch in touches {
 			guard let stroke = self.touchStrokesMap[touch] else { continue }
-			for coalescedTouch in event.coalescedTouches(for: touch) ?? [] {
-				let touchPoint = self.touchPoint(touch: coalescedTouch, in: contentView)
-				stroke.append([touchPoint])
+			if let touchPoints = event.coalescedTouches(for: touch)?.map({ self.touchPoint(touch: $0, in: contentView) }) {
+				stroke.append(touchPoints)
 			}
-			let point = touch.location(in: contentView)
-			//print("\(point)")
 		}
 	}
 	
 	override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?, contentView: UIView) {
-		//print("touchesEnded")
 		for touch in touches {
 			guard let stroke = self.touchStrokesMap[touch] else { continue }
+			stroke.close()
+			stroke.update()
 			self.strokes.append(stroke)
 			if self.strokes.count > 3 {
 				self.strokes.removeFirst()
 			}
+
+			/*
+			print("<---")
+			for index in stride(from: 0, to: stroke.indexes.count, by: 3) {
+				let index3 = [index + 0, index + 1, index + 2].map { stroke.indexes[$0] }
+				let vertex3 = index3.map { stroke.vertexes[Int($0)] }
+				print("((\(vertex3[0].x), \(vertex3[0].y)), ((\(vertex3[0].x), \(vertex3[0].y)), ((\(vertex3[0].x), \(vertex3[0].y))), ")
+			}
+			print("--->")
+			*/
+
 			self.touchStrokesMap[touch] = nil
 		}
 	}
@@ -181,7 +162,6 @@ class CanvasScene: RenderableScene {
 	override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?, contentView: UIView) {
 		for touch in touches {
 			let point = touch.location(in: contentView)
-			print("\(point)")
 			self.touchStrokesMap[touch] = nil
 		}
 	}
