@@ -6,10 +6,11 @@
 //
 //
 
-import Foundation
+import UIKit
 import CoreGraphics
 import QuartzCore
-import GLKit
+import simd
+
 
 typealias StrokeVertex = StrokeRenderer.Vertex
 
@@ -55,7 +56,7 @@ class StrokeRenderer: Renderer {
 	}
 
 	struct Uniforms {
-		var transform: GLKMatrix4
+		var transform: simd_float4x4
 	}
 
 	var vertexDescriptor: MTLVertexDescriptor {
@@ -74,7 +75,7 @@ class StrokeRenderer: Renderer {
 	}
 
 	lazy var library: MTLLibrary = {
-        return self.device.makeDefaultLibrary()!
+		return self.device.makeDefaultLibrary()!
 	}()
 
 	lazy var renderPipelineState: MTLRenderPipelineState = {
@@ -103,7 +104,7 @@ class StrokeRenderer: Renderer {
 		samplerDescriptor.magFilter = .linear
 		samplerDescriptor.sAddressMode = .repeat
 		samplerDescriptor.tAddressMode = .repeat
-        return self.device.makeSamplerState(descriptor: samplerDescriptor)!
+		return self.device.makeSamplerState(descriptor: samplerDescriptor)!
 	}()
 
 	func render(context: RenderContext, vertexBuffer: VertexBuffer<Vertex>, indexBuffer: VertexBuffer<UInt16>) {
@@ -114,8 +115,8 @@ class StrokeRenderer: Renderer {
 		commandEncoder.setRenderPipelineState(self.renderPipelineState)
 		commandEncoder.setFrontFacing(.counterClockwise)
 //		commandEncoder.setFrontFacing(.clockwise)
-        commandEncoder.setVertexBuffer(vertexBuffer.buffer, offset: 0, index: 0)
-        commandEncoder.setVertexBuffer(uniformsBuffer, offset: 0, index: 1)
+		commandEncoder.setVertexBuffer(vertexBuffer.buffer, offset: 0, index: 0)
+		commandEncoder.setVertexBuffer(uniformsBuffer, offset: 0, index: 1)
 		
 		commandEncoder.drawIndexedPrimitives(type: .triangle, indexCount: indexBuffer.count, indexType: .uint16, indexBuffer: indexBuffer.buffer, indexBufferOffset: 0)
 	}
@@ -128,8 +129,8 @@ class StrokeRenderer: Renderer {
 		commandEncoder.setRenderPipelineState(self.renderPipelineState)
 		commandEncoder.setFrontFacing(.counterClockwise)
 //		commandEncoder.setFrontFacing(.clockwise)
-        commandEncoder.setVertexBuffer(vertexBuffer.buffer, offset: 0, index: 0)
-        commandEncoder.setVertexBuffer(uniformsBuffer, offset: 0, index: 1)
+		commandEncoder.setVertexBuffer(vertexBuffer.buffer, offset: 0, index: 0)
+		commandEncoder.setVertexBuffer(uniformsBuffer, offset: 0, index: 1)
 		
 		commandEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: vertexBuffer.count)
 	}

@@ -9,7 +9,7 @@
 import Foundation
 import CoreGraphics
 import QuartzCore
-import GLKit
+import simd
 
 typealias PointVertex = PointsRenderer.Vertex
 
@@ -40,7 +40,7 @@ class PointsRenderer: Renderer {
 	}
 
 	struct Uniforms {
-		var transform: GLKMatrix4
+		var transform: simd_float4x4
 	}
 
 	let device: MTLDevice
@@ -53,7 +53,7 @@ class PointsRenderer: Renderer {
 	}
 
 	var library: MTLLibrary {
-        return self.device.makeDefaultLibrary()!
+		return self.device.makeDefaultLibrary()!
 	}
 
 	var vertexDescriptor: MTLVertexDescriptor {
@@ -93,7 +93,7 @@ class PointsRenderer: Renderer {
 		samplerDescriptor.magFilter = .linear
 		samplerDescriptor.sAddressMode = .repeat
 		samplerDescriptor.tAddressMode = .repeat
-        return self.device.makeSamplerState(descriptor: samplerDescriptor)!
+		return self.device.makeSamplerState(descriptor: samplerDescriptor)!
 	}()
 	
 	func vertexBuffer(for vertices: [Vertex], capacity: Int) -> VertexBuffer<Vertex> {
@@ -109,11 +109,11 @@ class PointsRenderer: Renderer {
 		commandEncoder.setRenderPipelineState(self.renderPipelineState)
 
 		commandEncoder.setFrontFacing(.clockwise)
-        commandEncoder.setVertexBuffer(vertexBuffer.buffer, offset: 0, index: 0)
-        commandEncoder.setVertexBuffer(uniformsBuffer, offset: 0, index: 1)
-
-        commandEncoder.setFragmentTexture(texture, index: 0)
-        commandEncoder.setFragmentSamplerState(self.colorSamplerState, index: 0)
+		commandEncoder.setVertexBuffer(vertexBuffer.buffer, offset: 0, index: 0)
+		commandEncoder.setVertexBuffer(uniformsBuffer, offset: 0, index: 1)
+		
+		commandEncoder.setFragmentTexture(texture, index: 0)
+		commandEncoder.setFragmentSamplerState(self.colorSamplerState, index: 0)
 
 		commandEncoder.drawPrimitives(type: .point, vertexStart: 0, vertexCount: vertexBuffer.count)
 	}

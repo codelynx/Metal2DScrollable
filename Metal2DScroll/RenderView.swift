@@ -8,7 +8,6 @@
 
 import UIKit
 import MetalKit
-import GLKit
 
 
 class RenderView: UIView, MTKViewDelegate {
@@ -123,7 +122,7 @@ class RenderView: UIView, MTKViewDelegate {
 		let transform1 = renderableScene.bounds.transform(to: targetRect)
 		let transform2 = self.mtkView.bounds.transform(to: CGRect(x: -1.0, y: -1.0, width: 2.0, height: 2.0))
 		let transform3 = CGAffineTransform.identity.translatedBy(x: 0, y: +1).scaledBy(x: 1, y: -1).translatedBy(x: 0, y: 1)
-		let transform = GLKMatrix4(transform1 * transform2 * transform3)
+		let transform = simd_float4x4(transform1 * transform2 * transform3)
 		let renderContext = RenderContext(commandEncoder: commandEncoder, transform: transform)
 		renderableScene.render(in: renderContext)
 

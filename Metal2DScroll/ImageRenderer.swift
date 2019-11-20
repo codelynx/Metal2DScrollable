@@ -8,7 +8,7 @@
 
 import Foundation
 import Metal
-import GLKit
+import simd
 
 typealias ImageVertex = ImageRenderer.Vertex
 
@@ -38,7 +38,7 @@ class ImageRenderer: Renderer {
 	}
 
 	struct Uniforms {
-		var transform: GLKMatrix4
+		var transform: simd_float4x4
 	}
 
 
@@ -70,7 +70,7 @@ class ImageRenderer: Renderer {
 	}
 
 	var library: MTLLibrary {
-        return self.device.makeDefaultLibrary()!
+		return self.device.makeDefaultLibrary()!
 	}
 
 	var vertexDescriptor: MTLVertexDescriptor {
@@ -132,11 +132,11 @@ class ImageRenderer: Renderer {
 
 		commandEncoder.setFrontFacing(.clockwise)
 //		commandEncoder.setCullMode(.back)
-        commandEncoder.setVertexBuffer(vertexBuffer.buffer, offset: 0, index: 0)
-        commandEncoder.setVertexBuffer(uniformsBuffer, offset: 0, index: 1)
-
-        commandEncoder.setFragmentTexture(texture, index: 0)
-        commandEncoder.setFragmentSamplerState(self.colorSamplerState, index: 0)
+		commandEncoder.setVertexBuffer(vertexBuffer.buffer, offset: 0, index: 0)
+		commandEncoder.setVertexBuffer(uniformsBuffer, offset: 0, index: 1)
+		
+		commandEncoder.setFragmentTexture(texture, index: 0)
+		commandEncoder.setFragmentSamplerState(self.colorSamplerState, index: 0)
 
 		commandEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: vertexBuffer.count)
 	}

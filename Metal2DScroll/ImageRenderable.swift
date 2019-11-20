@@ -8,7 +8,6 @@
 
 import Foundation
 import MetalKit
-import GLKit
 
 
 #if os(macOS)
@@ -38,7 +37,7 @@ class ImageRenderable: Renderable {
 	typealias RendererType = ImageRenderer
 
 	let device: MTLDevice
-	var transform = GLKMatrix4Identity
+	var transform = simd_float4x4.init(1)
 
 	var image: XImage
 	var frame: Rect
@@ -48,11 +47,11 @@ class ImageRenderable: Renderable {
 
 	init?(device: MTLDevice, image: XImage, frame: Rect) {
 		guard let cgImage = image.cgImage else { return nil }
-        var options: [MTKTextureLoader.Option : NSObject] = [MTKTextureLoader.Option.SRGB: false as NSNumber]
+		var options: [MTKTextureLoader.Option : NSObject] = [MTKTextureLoader.Option.SRGB: false as NSNumber]
 		if #available(iOS 10.0, *) {
-            options[MTKTextureLoader.Option.origin] = true as NSNumber
+			options[MTKTextureLoader.Option.origin] = true as NSNumber
 		}
-        guard let texture = try? device.textureLoader.newTexture(cgImage: cgImage, options: options) else { return nil }
+		guard let texture = try? device.textureLoader.newTexture(cgImage: cgImage, options: options) else { return nil }
 		let renderer = ImageRenderer.imageRenderer(for: device)
 		let vertices = renderer.vertices(for: frame)
 		guard let vertexBuffer = renderer.vertexBuffer(for: vertices) else { return nil }

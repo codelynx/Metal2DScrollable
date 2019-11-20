@@ -9,8 +9,7 @@
 import Foundation
 import Foundation
 import MetalKit
-import GLKit
-
+import simd
 
 //
 //	RenderContext
@@ -18,7 +17,7 @@ import GLKit
 
 struct RenderContext {
 	let commandEncoder: MTLRenderCommandEncoder
-	let transform: GLKMatrix4
+	let transform: simd_float4x4
 	var device: MTLDevice { return commandEncoder.device }
 }
 

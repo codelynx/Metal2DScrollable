@@ -9,7 +9,6 @@
 
 import Foundation
 import MetalKit
-import GLKit
 
 
 protocol Renderable {

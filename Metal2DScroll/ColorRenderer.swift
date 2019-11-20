@@ -8,7 +8,6 @@
 
 import Foundation
 import MetalKit
-import GLKit
 
 
 class ColorRenderer: Renderer {
@@ -47,7 +46,7 @@ class ColorRenderer: Renderer {
 	}
 
 	struct Uniforms {
-		var transform: GLKMatrix4
+		var transform: simd_float4x4
 	}
 
 	var vertexDescriptor: MTLVertexDescriptor {
@@ -66,7 +65,7 @@ class ColorRenderer: Renderer {
 	}
 
 	lazy var library: MTLLibrary = {
-        return self.device.makeDefaultLibrary()!
+		return self.device.makeDefaultLibrary()!
 	}()
 
 	lazy var renderPipelineState: MTLRenderPipelineState = {
@@ -95,7 +94,7 @@ class ColorRenderer: Renderer {
 		samplerDescriptor.magFilter = .linear
 		samplerDescriptor.sAddressMode = .repeat
 		samplerDescriptor.tAddressMode = .repeat
-        return self.device.makeSamplerState(descriptor: samplerDescriptor)!
+		return self.device.makeSamplerState(descriptor: samplerDescriptor)!
 	}()
 
 	func render(context: RenderContext, vertexBuffer: VertexBuffer<Vertex>) {
@@ -104,8 +103,8 @@ class ColorRenderer: Renderer {
 
 		let commandEncoder = context.commandEncoder
 		commandEncoder.setRenderPipelineState(self.renderPipelineState)
-        commandEncoder.setVertexBuffer(vertexBuffer.buffer, offset: 0, index: 0)
-        commandEncoder.setVertexBuffer(uniformsBuffer, offset: 0, index: 1)
+		commandEncoder.setVertexBuffer(vertexBuffer.buffer, offset: 0, index: 0)
+		commandEncoder.setVertexBuffer(uniformsBuffer, offset: 0, index: 1)
 		
 		commandEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: vertexBuffer.count)
 	}

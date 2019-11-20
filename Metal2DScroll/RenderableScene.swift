@@ -8,7 +8,6 @@
 
 import Foundation
 import MetalKit
-import GLKit
 
 
 class RenderableScene {

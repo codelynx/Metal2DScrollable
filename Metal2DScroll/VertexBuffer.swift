@@ -8,7 +8,6 @@
 
 import Foundation
 import MetalKit
-import GLKit
 
 
 //
@@ -29,7 +28,7 @@ class VertexBuffer<T> {
 		self.count = vertices.count
 		self.expand = (expand ?? 4096)
 		let length = MemoryLayout<T>.size * (vertices.count + self.expand)
-        self.buffer = device.makeBuffer(bytes: vertices, length: length, options: MTLResourceOptions())!
+		self.buffer = device.makeBuffer(bytes: vertices, length: length, options: MTLResourceOptions())!
 		self.capacity = length
 	}
 
@@ -49,7 +48,7 @@ class VertexBuffer<T> {
 			let length = self.count + vertices.count + self.expand
 			let buffer = self.device.makeBuffer(length: length, options: MTLResourceOptions())
 			let sourceArray = UnsafeMutablePointer<T>(OpaquePointer(self.buffer.contents()))
-            let destinationArray = UnsafeMutablePointer<T>(OpaquePointer(buffer!.contents()))!
+			let destinationArray = UnsafeMutablePointer<T>(OpaquePointer(buffer!.contents()))!
 			for index in 0 ..< self.count {
 				destinationArray[index] = sourceArray[index]
 			}

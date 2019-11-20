@@ -9,9 +9,6 @@
 import Foundation
 import CoreGraphics
 import MetalKit
-import GLKit
-
-
 
 
 struct StrokePoint {
