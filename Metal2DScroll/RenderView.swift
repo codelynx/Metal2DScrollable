@@ -29,9 +29,9 @@ class RenderView: UIView, MTKViewDelegate {
 	override func layoutSubviews() {
 		super.layoutSubviews()
 
-		self.sendSubview(toBack: self.mtkView)
-		self.bringSubview(toFront: self.drawView)
-		self.bringSubview(toFront: self.scrollView)
+		self.sendSubviewToBack(self.mtkView)
+		self.bringSubviewToFront(self.drawView)
+		self.bringSubviewToFront(self.scrollView)
 
 		if let renderableScene = self.renderableScene {
 			let contentSize = renderableScene.contentSize

@@ -308,8 +308,8 @@ class LineShape {
 	func append(_ touchPoints: [TouchPoint]) {
 		guard touchPoints.count > 0 else { return }
 
-		let touchPoints: [TouchPoint] = [self.lastTouchPoint].flatMap { $0 } + touchPoints
-		var lineSegments: [LineSegment] = [self.lastLineSegment].flatMap { $0 }
+		let touchPoints: [TouchPoint] = [self.lastTouchPoint].compactMap { $0 } + touchPoints
+		var lineSegments: [LineSegment] = [self.lastLineSegment].compactMap { $0 }
 		lineSegments += touchPoints.pair { (p1, p2) in LineSegment(from: p1, to: p2) }
 
 		var triangles = [(CPoint, CPoint, CPoint)]()
@@ -401,7 +401,7 @@ class LineShape {
 		var appendingVertexes = [StrokeVertex]()
 		let tentativePoints = triangles.flatMap { [$0.0, $0.1, $0.2] }
 		for tentativePoint in tentativePoints {
-			if let index = points.index(of: tentativePoint) {
+			if let index = points.firstIndex(of: tentativePoint) {
 				appendingIndexes.append(UInt16(index))
 			}
 			else {

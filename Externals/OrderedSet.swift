@@ -105,7 +105,7 @@ public class OrderedSet<T: Hashable> {
     public func remove(_ object: T) {
         if let index = contents[object] {
             contents[object] = nil
-            sequencedContents[index].deallocate(capacity: 1)
+            sequencedContents[index].deallocate()
             sequencedContents.remove(at: index)
             
             for (object, i) in contents {
@@ -149,7 +149,7 @@ public class OrderedSet<T: Hashable> {
         contents.removeAll()
         
         for sequencedContent in sequencedContents {
-            sequencedContent.deallocate(capacity: 1)
+            sequencedContent.deallocate()
         }
         
         sequencedContents.removeAll()

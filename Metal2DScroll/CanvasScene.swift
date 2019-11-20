@@ -74,9 +74,9 @@ class CanvasScene: RenderableScene {
 		var paragraphStyle = NSParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
 		paragraphStyle.alignment = .center
 		return [
-			NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 32),
-			NSAttributedStringKey.foregroundColor: UIColor.white,
-            NSAttributedStringKey.paragraphStyle: paragraphStyle
+			NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 32),
+			NSAttributedString.Key.foregroundColor: UIColor.white,
+            NSAttributedString.Key.paragraphStyle: paragraphStyle
 		]
 	}()
 
