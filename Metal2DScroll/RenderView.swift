@@ -117,7 +117,7 @@ class RenderView: UIView, MTKViewDelegate {
 		renderPassDescriptor.colorAttachments[0].storeAction = .store
 
 		let commandBuffer = commandQueue.makeCommandBuffer()
-		let commandEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor)
+		guard let commandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: renderPassDescriptor) else { return }
 	
 		let targetRect = contentView.convert(self.contentView.bounds, to: self.mtkView)
 		let transform1 = renderableScene.bounds.transform(to: targetRect)
@@ -129,8 +129,8 @@ class RenderView: UIView, MTKViewDelegate {
 
 		commandEncoder.endEncoding()
 		
-		commandBuffer.present(drawable)
-		commandBuffer.commit()
+		commandBuffer?.present(drawable)
+		commandBuffer?.commit()
 	}
 	
 	func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {

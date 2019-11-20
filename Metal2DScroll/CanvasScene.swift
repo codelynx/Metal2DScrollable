@@ -31,7 +31,7 @@ class CanvasScene: RenderableScene {
 
 	lazy var brushTexture: MTLTexture = {
 		let image = UIImage(named: "PointsParticle.png")!
-		let texture = try! self.device.textureLoader.newTexture(with: image.cgImage!, options: nil)
+        let texture = try! self.device.textureLoader.newTexture(cgImage: image.cgImage!, options: nil)
 		return texture
 	}()
 
@@ -70,13 +70,13 @@ class CanvasScene: RenderableScene {
 		return stroke
 	}()
 
-	private lazy var textAttributes: [String: AnyObject] = {
+    private lazy var textAttributes: [NSAttributedString.Key: AnyObject] = {
 		var paragraphStyle = NSParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
 		paragraphStyle.alignment = .center
 		return [
-			NSFontAttributeName: UIFont.boldSystemFont(ofSize: 32),
-			NSForegroundColorAttributeName: UIColor.white,
-			NSParagraphStyleAttributeName: paragraphStyle
+			NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 32),
+			NSAttributedStringKey.foregroundColor: UIColor.white,
+            NSAttributedStringKey.paragraphStyle: paragraphStyle
 		]
 	}()
 

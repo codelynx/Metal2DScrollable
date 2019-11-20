@@ -48,11 +48,11 @@ class ImageRenderable: Renderable {
 
 	init?(device: MTLDevice, image: XImage, frame: Rect) {
 		guard let cgImage = image.cgImage else { return nil }
-		var options: [String : NSObject] = [MTKTextureLoaderOptionSRGB: false as NSNumber]
+        var options: [MTKTextureLoader.Option : NSObject] = [MTKTextureLoader.Option.SRGB: false as NSNumber]
 		if #available(iOS 10.0, *) {
-			options[MTKTextureLoaderOptionOrigin] = true as NSNumber
+            options[MTKTextureLoader.Option.origin] = true as NSNumber
 		}
-		guard let texture = try? device.textureLoader.newTexture(with: cgImage, options: options) else { return nil }
+        guard let texture = try? device.textureLoader.newTexture(cgImage: cgImage, options: options) else { return nil }
 		let renderer = ImageRenderer.imageRenderer(for: device)
 		let vertices = renderer.vertices(for: frame)
 		guard let vertexBuffer = renderer.vertexBuffer(for: vertices) else { return nil }

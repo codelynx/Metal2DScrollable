@@ -70,7 +70,7 @@ class ImageRenderer: Renderer {
 	}
 
 	var library: MTLLibrary {
-		return self.device.newDefaultLibrary()!
+        return self.device.makeDefaultLibrary()!
 	}
 
 	var vertexDescriptor: MTLVertexDescriptor {
@@ -114,7 +114,7 @@ class ImageRenderer: Renderer {
 		samplerDescriptor.magFilter = .linear
 		samplerDescriptor.sAddressMode = .repeat
 		samplerDescriptor.tAddressMode = .repeat
-		return self.device.makeSamplerState(descriptor: samplerDescriptor)
+		return self.device.makeSamplerState(descriptor: samplerDescriptor)!
 	}()
 
 
@@ -132,11 +132,11 @@ class ImageRenderer: Renderer {
 
 		commandEncoder.setFrontFacing(.clockwise)
 //		commandEncoder.setCullMode(.back)
-		commandEncoder.setVertexBuffer(vertexBuffer.buffer, offset: 0, at: 0)
-		commandEncoder.setVertexBuffer(uniformsBuffer, offset: 0, at: 1)
+        commandEncoder.setVertexBuffer(vertexBuffer.buffer, offset: 0, index: 0)
+        commandEncoder.setVertexBuffer(uniformsBuffer, offset: 0, index: 1)
 
-		commandEncoder.setFragmentTexture(texture, at: 0)
-		commandEncoder.setFragmentSamplerState(self.colorSamplerState, at: 0)
+        commandEncoder.setFragmentTexture(texture, index: 0)
+        commandEncoder.setFragmentSamplerState(self.colorSamplerState, index: 0)
 
 		commandEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: vertexBuffer.count)
 	}

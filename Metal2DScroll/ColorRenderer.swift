@@ -66,7 +66,7 @@ class ColorRenderer: Renderer {
 	}
 
 	lazy var library: MTLLibrary = {
-		return self.device.newDefaultLibrary()!
+        return self.device.makeDefaultLibrary()!
 	}()
 
 	lazy var renderPipelineState: MTLRenderPipelineState = {
@@ -95,7 +95,7 @@ class ColorRenderer: Renderer {
 		samplerDescriptor.magFilter = .linear
 		samplerDescriptor.sAddressMode = .repeat
 		samplerDescriptor.tAddressMode = .repeat
-		return self.device.makeSamplerState(descriptor: samplerDescriptor)
+        return self.device.makeSamplerState(descriptor: samplerDescriptor)!
 	}()
 
 	func render(context: RenderContext, vertexBuffer: VertexBuffer<Vertex>) {
@@ -104,8 +104,8 @@ class ColorRenderer: Renderer {
 
 		let commandEncoder = context.commandEncoder
 		commandEncoder.setRenderPipelineState(self.renderPipelineState)
-		commandEncoder.setVertexBuffer(vertexBuffer.buffer, offset: 0, at: 0)
-		commandEncoder.setVertexBuffer(uniformsBuffer, offset: 0, at: 1)
+        commandEncoder.setVertexBuffer(vertexBuffer.buffer, offset: 0, index: 0)
+        commandEncoder.setVertexBuffer(uniformsBuffer, offset: 0, index: 1)
 		
 		commandEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: vertexBuffer.count)
 	}

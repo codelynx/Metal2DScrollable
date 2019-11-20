@@ -53,7 +53,7 @@ class PointsRenderer: Renderer {
 	}
 
 	var library: MTLLibrary {
-		return self.device.newDefaultLibrary()!
+        return self.device.makeDefaultLibrary()!
 	}
 
 	var vertexDescriptor: MTLVertexDescriptor {
@@ -93,7 +93,7 @@ class PointsRenderer: Renderer {
 		samplerDescriptor.magFilter = .linear
 		samplerDescriptor.sAddressMode = .repeat
 		samplerDescriptor.tAddressMode = .repeat
-		return self.device.makeSamplerState(descriptor: samplerDescriptor)
+        return self.device.makeSamplerState(descriptor: samplerDescriptor)!
 	}()
 	
 	func vertexBuffer(for vertices: [Vertex], capacity: Int) -> VertexBuffer<Vertex> {
@@ -109,11 +109,11 @@ class PointsRenderer: Renderer {
 		commandEncoder.setRenderPipelineState(self.renderPipelineState)
 
 		commandEncoder.setFrontFacing(.clockwise)
-		commandEncoder.setVertexBuffer(vertexBuffer.buffer, offset: 0, at: 0)
-		commandEncoder.setVertexBuffer(uniformsBuffer, offset: 0, at: 1)
+        commandEncoder.setVertexBuffer(vertexBuffer.buffer, offset: 0, index: 0)
+        commandEncoder.setVertexBuffer(uniformsBuffer, offset: 0, index: 1)
 
-		commandEncoder.setFragmentTexture(texture, at: 0)
-		commandEncoder.setFragmentSamplerState(self.colorSamplerState, at: 0)
+        commandEncoder.setFragmentTexture(texture, index: 0)
+        commandEncoder.setFragmentSamplerState(self.colorSamplerState, index: 0)
 
 		commandEncoder.drawPrimitives(type: .point, vertexStart: 0, vertexCount: vertexBuffer.count)
 	}
