@@ -11,8 +11,8 @@ using namespace metal;
 
 
 struct VertexIn {
-	packed_float4 position [[ attribute(0) ]];
-	packed_float2 texcoords [[ attribute(1) ]];
+	packed_float4 position;
+	packed_float2 texcoords;
 };
 
 struct VertexOut {
