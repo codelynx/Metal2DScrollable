@@ -1,10 +1,10 @@
 //
 //	Sequence+Z.swift
-//	ZKit [swift 3]
+//	ZKit [swift 5]
 //
 //	The MIT License (MIT)
 //
-//	Copyright (c) 2016 Electricwoods LLC, Kaz Yoshikawa.
+//	Copyright (c) 2019 Electricwoods LLC, Kaz Yoshikawa.
 //
 //	Permission is hereby granted, free of charge, to any person obtaining a copy 
 //	of this software and associated documentation files (the "Software"), to deal 
@@ -26,33 +26,33 @@
 //
 //
 //	Description:
-//		pair() invokes closure with a paired items accoding to the sequence.
-//		It is usuful to build another sequence of item[N-1], item[N] based from
-//		the current sequence.
+//		makePairs() create an array of tuples which is pair of (n), (n + 1) in sequence.
+//		Make sure the sequence is finite.
 //
 //	Usage:
 //		let array = [1, 3, 4, 7, 8, 9]
-//		let items = array.pair { "\($0.0)-\($0.1)" } // ["1-3", "3-4", "4-7", "7-8", "8-9"]
+//		for (item1, item2) in array.makePairs() {
+//			print("\(item1) - \(item2)")
+//		}
 //
+//	Result:
+//		1 - 3
+//		3 - 4
+//		4 - 7
+//		7 - 8
+//		8 - 9
+
 
 
 extension Sequence {
 
-	@discardableResult
-	func pair<T>(_ closure: (Self.Iterator.Element, Self.Iterator.Element) -> T ) -> [T] {
-		var results = [T]()
-		var previous: Self.Iterator.Element? = nil
-		var iterator = self.makeIterator()
-		while let item = iterator.next() {
-			if let previous = previous {
-				results.append(closure(previous, item))
-			}
-			previous = item
-		}
-		return results
+	func makePairs() -> [(Self.Iterator.Element, Self.Iterator.Element)] {
+		let array = self.map { $0 }
+		return zip(array.dropLast(), array.dropFirst()).map { ($0, $1) }
 	}
 
 }
+
 
 
 

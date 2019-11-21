@@ -40,10 +40,13 @@ class CPoint: Hashable {
 		self.point = CGPoint(x: x, y: y)
 	}
 	
-	var hashValue: Int { return self.x.hashValue &- self.y.hashValue }
-	
 	static func == (lhs: CPoint, rhs: CPoint) -> Bool { // same value points should be different
 		return lhs === rhs
+	}
+
+	func hash(into hasher: inout Hasher) {
+		hasher.combine(self.x)
+		hasher.combine(self.y)
 	}
 
 	static let zero = CPoint(x: 0, y: 0)
@@ -310,7 +313,7 @@ class LineShape {
 
 		let touchPoints: [TouchPoint] = [self.lastTouchPoint].compactMap { $0 } + touchPoints
 		var lineSegments: [LineSegment] = [self.lastLineSegment].compactMap { $0 }
-		lineSegments += touchPoints.pair { (p1, p2) in LineSegment(from: p1, to: p2) }
+		lineSegments += touchPoints.makePairs().map { LineSegment(from: $0, to: $1) }
 
 		var triangles = [(CPoint, CPoint, CPoint)]()
 		if let first = lineSegments.first {
@@ -342,7 +345,7 @@ class LineShape {
 		self.lastTouchPoint = touchPoints.last
 		self.lastLineSegment = lineSegments.last
 		
-		lineSegments.pair { (line1, line2) in
+		for (line1, line2) in lineSegments.makePairs() {
 			let cap1a = line1.lineCap(.from)
 			let cap1b = line1.lineCap(.to)
 			let cap2a = line2.lineCap(.from)

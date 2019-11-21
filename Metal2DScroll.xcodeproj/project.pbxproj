@@ -40,12 +40,12 @@
 		CC9992C41E068D88001D92F1 /* StrokeRenderable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC9992C11E068D88001D92F1 /* StrokeRenderable.swift */; };
 		CC9992C51E068D88001D92F1 /* StrokeRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC9992C21E068D88001D92F1 /* StrokeRenderer.swift */; };
 		CC9992C61E068D88001D92F1 /* StrokeShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = CC9992C31E068D88001D92F1 /* StrokeShaders.metal */; };
-		CC9992CA1E06B48E001D92F1 /* Sequence+Z.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC9992C91E06B48E001D92F1 /* Sequence+Z.swift */; };
 		CCC8C8531E0BA25A00103DC9 /* OrderedSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCC8C8511E0BA25A00103DC9 /* OrderedSet.swift */; };
 		CCC8C8541E0BA25A00103DC9 /* OrderedSet.webloc in Resources */ = {isa = PBXBuildFile; fileRef = CCC8C8521E0BA25A00103DC9 /* OrderedSet.webloc */; };
 		CCE49B0A1E0018AB0016111C /* ColorRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCE49B081E0018AB0016111C /* ColorRenderer.swift */; };
 		CCE49B0B1E0018AB0016111C /* ColorShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = CCE49B091E0018AB0016111C /* ColorShaders.metal */; };
 		CCE49B0D1E001BD90016111C /* ColorRenderable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCE49B0C1E001BD90016111C /* ColorRenderable.swift */; };
+		CCE773C02386371A0066542E /* Sequence+Z.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCE773BF2386371A0066542E /* Sequence+Z.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -85,12 +85,12 @@
 		CC9992C11E068D88001D92F1 /* StrokeRenderable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StrokeRenderable.swift; sourceTree = "<group>"; };
 		CC9992C21E068D88001D92F1 /* StrokeRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StrokeRenderer.swift; sourceTree = "<group>"; };
 		CC9992C31E068D88001D92F1 /* StrokeShaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = StrokeShaders.metal; sourceTree = "<group>"; };
-		CC9992C91E06B48E001D92F1 /* Sequence+Z.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Sequence+Z.swift"; sourceTree = "<group>"; };
 		CCC8C8511E0BA25A00103DC9 /* OrderedSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderedSet.swift; sourceTree = "<group>"; };
 		CCC8C8521E0BA25A00103DC9 /* OrderedSet.webloc */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = OrderedSet.webloc; sourceTree = "<group>"; };
 		CCE49B081E0018AB0016111C /* ColorRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ColorRenderer.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		CCE49B091E0018AB0016111C /* ColorShaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; lineEnding = 0; path = ColorShaders.metal; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.metal; };
 		CCE49B0C1E001BD90016111C /* ColorRenderable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ColorRenderable.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		CCE773BF2386371A0066542E /* Sequence+Z.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Sequence+Z.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -166,7 +166,7 @@
 				CC0506511DFEB04A00A9E7A2 /* RenderDrawView.swift */,
 				CC05064B1DFE9A4F00A9E7A2 /* Renderer.swift */,
 				CC05064F1DFE9D0200A9E7A2 /* RenderView.swift */,
-				CC9992C91E06B48E001D92F1 /* Sequence+Z.swift */,
+				CCE773BF2386371A0066542E /* Sequence+Z.swift */,
 				CC9992C11E068D88001D92F1 /* StrokeRenderable.swift */,
 				CC9992C21E068D88001D92F1 /* StrokeRenderer.swift */,
 				CC9992C31E068D88001D92F1 /* StrokeShaders.metal */,
@@ -287,11 +287,11 @@
 				CC77EE0E1DFDEA39001E8F77 /* GeoUtils.swift in Sources */,
 				CC05065A1DFEDE3F00A9E7A2 /* CoreGraphics+Z.swift in Sources */,
 				CC9992C51E068D88001D92F1 /* StrokeRenderer.swift in Sources */,
-				CC9992CA1E06B48E001D92F1 /* Sequence+Z.swift in Sources */,
 				CCC8C8531E0BA25A00103DC9 /* OrderedSet.swift in Sources */,
 				CC0506501DFE9D0200A9E7A2 /* RenderView.swift in Sources */,
 				CCE49B0D1E001BD90016111C /* ColorRenderable.swift in Sources */,
 				CC77EE0A1DFDE991001E8F77 /* ImageRenderer.swift in Sources */,
+				CCE773C02386371A0066542E /* Sequence+Z.swift in Sources */,
 				CC7473C01E00D6F600E55064 /* PointsRenderable.swift in Sources */,
 				CC0506521DFEB04A00A9E7A2 /* RenderDrawView.swift in Sources */,
 			);
