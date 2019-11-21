@@ -134,15 +134,15 @@ class StrokeRenderer: Renderer {
 	func vertices(for rect: Rect, color: UIColor) -> [Vertex] {
 		let l = rect.minX, r = rect.maxX, t = rect.minY, b = rect.maxY
 		let rgba = color.rgba
-		let (_r, _g, _b, _a) = (Float(rgba.r), Float(rgba.g), Float(rgba.b), Float(rgba.a))
+		let (R, G, B, A) = (Float(rgba.r), Float(rgba.g), Float(rgba.b), Float(rgba.a))
 
 		return [
-			Vertex(x: l, y: t, z: 0, w: 1, r: _r, g: _g, b: _b, a: _a),
-			Vertex(x: l, y: b, z: 0, w: 1, r: _r, g: _g, b: _b, a: _a),
-			Vertex(x: r, y: b, z: 0, w: 1, r: _r, g: _g, b: _b, a: _a),
-			Vertex(x: l, y: t, z: 0, w: 1, r: _r, g: _g, b: _b, a: _a),
-			Vertex(x: r, y: b, z: 0, w: 1, r: _r, g: _g, b: _b, a: _a),
-			Vertex(x: r, y: t, z: 0, w: 1, r: _r, g: _g, b: _b, a: _a),
+			Vertex(x: l, y: t, z: 0, w: 1, r: R, g: G, b: B, a: A),
+			Vertex(x: l, y: b, z: 0, w: 1, r: R, g: G, b: B, a: A),
+			Vertex(x: r, y: b, z: 0, w: 1, r: R, g: G, b: B, a: A),
+			Vertex(x: l, y: t, z: 0, w: 1, r: R, g: G, b: B, a: A),
+			Vertex(x: r, y: b, z: 0, w: 1, r: R, g: G, b: B, a: A),
+			Vertex(x: r, y: t, z: 0, w: 1, r: R, g: G, b: B, a: A),
 		]
 	}
 }
