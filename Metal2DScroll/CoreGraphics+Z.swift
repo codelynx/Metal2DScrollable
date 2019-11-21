@@ -15,9 +15,9 @@ extension CGRect {
 	func transform(to rect: CGRect) -> CGAffineTransform {
 		var t = CGAffineTransform.identity
 		t = t.translatedBy(x: -self.minX, y: -self.minY)
+		t = t.translatedBy(x: rect.minX, y: rect.minY)
 		t = t.scaledBy(x: 1 / self.width, y: 1 / self.height)
 		t = t.scaledBy(x: rect.width, y: rect.height)
-		t = t.translatedBy(x: rect.minX * self.width / rect.width, y: rect.minY * self.height / rect.height)
 		return t
 	}
 
